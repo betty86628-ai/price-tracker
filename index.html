@@ -1,0 +1,2091 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+<title>比價行李箱</title>
+<link rel="manifest" href="manifest.json" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="比價行李箱" />
+<meta name="theme-color" content="#fff7ed" />
+<link rel="apple-touch-icon" href="icon-192.png" />
+<link rel="icon" href="icon-192.png" type="image/png" />
+<script>
+window.addEventListener('error', function (e) {
+  var root = document.getElementById('root');
+  if (root && !root.innerHTML) {
+    root.innerHTML = '<div style="padding:24px;font-family:sans-serif;color:#7c2d12;background:#fff7ed;min-height:100vh;line-height:1.6;">' +
+      '<b>頁面載入時發生錯誤</b><br/>' + (e.message || '未知錯誤') +
+      '<br/><br/>這個版本不依賴任何外部套件，如果還是看到這個訊息，麻煩截圖回報。</div>';
+  }
+});
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
+/* ---------- reset & base ---------- */
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:#fff7ed;color:#292524;-webkit-font-smoothing:antialiased;}
+button{font:inherit;cursor:pointer;background:none;border:none;color:inherit;}
+input,select,textarea{font:inherit;color:inherit;}
+img{max-width:100%;display:block;}
+a{color:inherit;text-decoration:none;}
+.font-display{font-family:'Fraunces',ui-serif,Georgia,serif;}
+.font-body{font-family:'Inter',ui-sans-serif,system-ui,-apple-system,sans-serif;}
+.tabular{font-variant-numeric:tabular-nums;}
+
+/* ---------- layout utilities ---------- */
+.flex{display:flex;} .flex-col{flex-direction:column;} .flex-wrap{flex-wrap:wrap;}
+.items-center{align-items:center;} .items-baseline{align-items:baseline;} .items-start{align-items:flex-start;}
+.justify-between{justify-content:space-between;} .justify-center{justify-content:center;} .justify-end{justify-content:flex-end;}
+.flex-1{flex:1 1 0%;} .shrink-0{flex-shrink:0;} .min-w-0{min-width:0;}
+.grid{display:grid;} .grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr));} .grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr));}
+.hidden{display:none !important;}
+.relative{position:relative;} .absolute{position:absolute;} .fixed{position:fixed;} .sticky{position:sticky;}
+.inset-0{top:0;right:0;bottom:0;left:0;}
+.gap-1{gap:4px;} .gap-2{gap:8px;} .gap-3{gap:12px;} .gap-4{gap:16px;}
+.w-full{width:100%;} .h-full{height:100%;}
+.max-w-app{max-width:720px;margin-left:auto;margin-right:auto;}
+.min-h-screen{min-height:100vh;}
+.overflow-x-auto{overflow-x:auto;} .overflow-y-auto{overflow-y:auto;}
+.text-left{text-align:left;} .text-center{text-align:center;} .text-right{text-align:right;}
+.rounded-sm{border-radius:6px;} .rounded{border-radius:10px;} .rounded-lg{border-radius:14px;} .rounded-xl{border-radius:18px;} .rounded-full{border-radius:999px;}
+.shadow-sm{box-shadow:0 1px 3px rgba(41,37,36,0.08);}
+.shadow-md{box-shadow:0 8px 20px -8px rgba(41,37,36,0.25);}
+.shadow-lg{box-shadow:0 12px 30px -8px rgba(41,37,36,0.30);}
+.shadow-2xl{box-shadow:0 24px 60px -12px rgba(41,37,36,0.45);}
+.transition{transition:all .15s ease;}
+.underline{text-decoration:underline;}
+.opacity-75{opacity:.75;}
+
+/* spacing */
+.p1{padding:4px;} .p2{padding:8px;} .p3{padding:12px;} .p4{padding:16px;} .p5{padding:20px;} .p6{padding:24px;}
+.px1{padding-left:4px;padding-right:4px;} .px2{padding-left:8px;padding-right:8px;} .px3{padding-left:12px;padding-right:12px;}
+.px4{padding-left:16px;padding-right:16px;} .px5{padding-left:20px;padding-right:20px;} .px6{padding-left:24px;padding-right:24px;}
+.py1{padding-top:4px;padding-bottom:4px;} .py1h{padding-top:6px;padding-bottom:6px;} .py2{padding-top:8px;padding-bottom:8px;}
+.py2h{padding-top:10px;padding-bottom:10px;} .py3{padding-top:12px;padding-bottom:12px;} .py4{padding-top:16px;padding-bottom:16px;}
+.py5{padding-top:20px;padding-bottom:20px;} .py16{padding-top:64px;padding-bottom:64px;}
+.mt1{margin-top:4px;} .mt1h{margin-top:6px;} .mt2{margin-top:8px;} .mt3{margin-top:12px;} .mt4{margin-top:16px;}
+.mt5{margin-top:20px;} .mt6{margin-top:24px;}
+.mb1{margin-bottom:4px;} .mb2{margin-bottom:8px;} .mb3{margin-bottom:12px;}
+.space-y-3 > * + *{margin-top:12px;} .space-y-4 > * + *{margin-top:16px;} .space-y-7 > * + *{margin-top:28px;}
+
+/* typography sizes */
+.text-10{font-size:10px;} .text-xs{font-size:12px;} .text-sm{font-size:14px;} .text-base{font-size:16px;}
+.text-lg{font-size:18px;} .text-xl{font-size:22px;} .text-2xl{font-size:26px;}
+.font-medium{font-weight:500;} .font-semibold{font-weight:600;} .font-bold{font-weight:700;}
+.leading-tight{line-height:1.25;} .leading-snug{line-height:1.35;} .leading-relaxed{line-height:1.6;}
+
+/* palette */
+.bg-page{background:#fff7ed;}
+.bg-white{background:#ffffff;}
+.bg-stone-100{background:#f5f5f4;}
+.bg-stone-800{background:#292524;}
+.bg-orange-50{background:#fff7ed;}
+.bg-orange-100{background:#ffedd5;}
+.bg-orange-600{background:#ea580c;}
+.bg-orange-700{background:#c2410c;}
+.bg-emerald-50{background:#ecfdf5;}
+.bg-emerald-600{background:#059669;}
+.bg-rose-50{background:#fff1f2;}
+.bg-black-50{background:rgba(0,0,0,.5);}
+
+.text-white{color:#ffffff;}
+.text-ink{color:#292524;}
+.text-muted{color:#78716c;}
+.text-faint{color:#a8a29e;}
+.text-faint2{color:#d6d3d1;}
+.text-orange-200{color:#fed7aa;}
+.text-orange-600{color:#ea580c;}
+.text-emerald-600{color:#059669;}
+.text-emerald-700{color:#047857;}
+.text-amber-700{color:#b45309;}
+.text-rose-600{color:#e11d48;}
+
+.border{border:1px solid #ffedd5;}
+.border-t{border-top:1px solid #ffedd5;}
+.border-dashed{border-style:dashed;border-color:#fed7aa;}
+.border-orange-200{border-color:#fed7aa;}
+.border-transparent{border-color:transparent;}
+
+/* buttons & inputs */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:14px;padding:10px 16px;font-size:14px;font-weight:600;transition:background .15s ease,border-color .15s ease,color .15s ease;}
+.btn-primary{background:#ea580c;color:#fff;}
+.btn-primary:hover{background:#c2410c;}
+.btn-outline{background:#fff;border:1px solid #ffedd5;color:#292524;}
+.btn-outline:hover{border-color:#fdba74;}
+.btn-danger-outline{background:#fff;border:1px solid #ffedd5;color:#e11d48;}
+.btn-danger-outline:hover{background:#fff1f2;}
+.icon-btn{width:36px;height:36px;border-radius:999px;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid #fed7aa;color:#78716c;}
+.icon-btn:hover{color:#ea580c;border-color:#fdba74;}
+.field-input{width:100%;padding:10px 12px;border-radius:14px;border:1px solid #ffedd5;background:#fff;font-size:14px;color:#292524;outline:none;}
+.field-input:focus{border-color:#ea580c;box-shadow:0 0 0 3px rgba(234,88,12,0.15);}
+.field-label{font-size:12px;color:#a8a29e;display:block;margin-bottom:4px;}
+textarea.field-input{resize:none;}
+
+/* ---------- header ---------- */
+.app-header{position:sticky;top:0;z-index:30;background:#fff7ed;border-bottom:1px solid #ffedd5;}
+.accent-rule{height:4px;background:linear-gradient(to right,#fdba74,#f97316,#fdba74);}
+.header-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px 8px;}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-badge{width:32px;height:32px;border-radius:999px;background:#fff;border:1px solid #fed7aa;display:flex;align-items:center;justify-content:center;color:#ea580c;flex-shrink:0;}
+.brand-title{font-size:18px;line-height:1;color:#292524;}
+.brand-sub{font-size:12px;color:#a8a29e;line-height:1;margin-top:4px;}
+.search-wrap{position:relative;padding:0 16px 10px;}
+.search-icon{position:absolute;left:32px;top:50%;transform:translateY(-50%);color:#a8a29e;}
+.search-input{width:100%;padding:10px 12px 10px 38px;border-radius:999px;border:1px solid #fed7aa;background:#fff;font-size:14px;outline:none;}
+.search-input:focus{border-color:#ea580c;box-shadow:0 0 0 3px rgba(234,88,12,0.15);}
+.category-tabs{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:4px 16px;}
+.category-tab{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 16px;border-radius:16px;border:1px solid transparent;color:#a8a29e;}
+.category-tab.active{background:#fff;border-color:#fed7aa;box-shadow:0 1px 3px rgba(41,37,36,0.06);color:#292524;}
+.category-tab.active .cat-icon{color:#ea580c;}
+.category-tab-label{font-size:12px;}
+.category-tab-add{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 16px;color:#a8a29e;}
+.category-tab-add:hover{color:#ea580c;}
+.cat-add-input{width:96px;padding:6px 10px;font-size:14px;border:1px solid #fed7aa;border-radius:10px;background:#fff;outline:none;}
+.filter-row{display:flex;gap:8px;padding:4px 16px 12px;}
+.filter-select{padding:6px 12px;border-radius:999px;border:1px solid #fed7aa;background:#fff;font-size:14px;color:#57534e;}
+
+/* ---------- main / sections / cards ---------- */
+.main{max-width:720px;margin:0 auto;padding:20px 16px;}
+.section{margin-bottom:24px;}
+.section-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;}
+.section-title-wrap{display:flex;align-items:baseline;gap:8px;}
+.section-title{font-size:18px;color:#292524;}
+.section-count{font-size:12px;color:#a8a29e;}
+.section-add-btn{width:28px;height:28px;border-radius:999px;background:#fff;border:1px solid #fed7aa;display:flex;align-items:center;justify-content:center;color:#ea580c;}
+.section-add-btn:hover{background:#fff7ed;}
+.product-list{display:flex;flex-direction:column;gap:12px;}
+.product-card{position:relative;width:100%;text-align:left;background:#fff;border-radius:18px;padding:12px;display:flex;align-items:center;gap:12px;border:1px solid #ffedd5;transition:all .15s ease;}
+.product-card:hover{border-color:#fdba74;box-shadow:0 8px 20px -10px rgba(41,37,36,0.25);}
+.product-thumb{width:64px;height:64px;border-radius:14px;background:#fff7ed;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.product-thumb img{width:100%;height:100%;object-fit:cover;}
+.product-info{flex:1;min-width:0;}
+.product-brand{font-size:14px;font-weight:500;color:#ea580c;}
+.product-name{font-family:'Fraunces',serif;font-size:16px;color:#292524;line-height:1.35;margin-top:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.product-spec{font-size:12px;color:#a8a29e;margin-top:4px;}
+.price-badge-wrap{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:64px;}
+.price-badge{width:64px;height:64px;border-radius:999px;background:#ecfdf5;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.price-badge-empty{width:64px;height:64px;border-radius:999px;background:#f5f5f4;display:flex;align-items:center;justify-content:center;font-size:12px;color:#a8a29e;}
+.price-badge-currency{font-size:14px;font-weight:700;color:#059669;}
+.price-badge-label{font-size:10px;color:#059669;}
+.price-badge-sub{font-size:12px;color:#a8a29e;margin-top:6px;text-align:center;line-height:1.3;}
+.empty-state{text-align:center;padding:64px 0;color:#a8a29e;}
+
+.fab{display:none;position:fixed;bottom:20px;right:20px;z-index:30;width:56px;height:56px;border-radius:999px;background:#ea580c;color:#fff;align-items:center;justify-content:center;box-shadow:0 12px 30px -8px rgba(41,37,36,0.30);}
+
+/* ---------- overlay / drawer / modal ---------- */
+.overlay-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40;}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:100%;max-width:480px;background:#fff;z-index:41;overflow-y:auto;box-shadow:-12px 0 30px -8px rgba(41,37,36,0.30);}
+.drawer-header{position:sticky;top:0;background:#fff;border-bottom:1px solid #ffedd5;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;z-index:2;}
+.drawer-body{padding:0 24px 32px;}
+.drawer-image{height:160px;background:#fff7ed;border-radius:18px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin:20px 0 16px;}
+.drawer-image img{width:100%;height:100%;object-fit:cover;}
+.drawer-brand{font-size:14px;font-weight:500;color:#ea580c;}
+.drawer-title{font-family:'Fraunces',serif;font-size:24px;color:#292524;margin-top:4px;}
+.drawer-spec{font-size:12px;color:#a8a29e;margin-top:4px;}
+.drawer-note{font-size:14px;color:#57534e;line-height:1.6;margin-top:12px;}
+.drawer-actions{display:flex;gap:8px;margin-top:20px;}
+.price-list{border:1px solid #ffedd5;border-radius:18px;padding:0 12px;background:#fff;}
+.price-list > .price-row + .price-row{border-top:1px solid #fff7ed;}
+.price-row{display:flex;align-items:flex-start;gap:12px;padding:12px 0;}
+.price-row.best{background:#fff7ed;margin:0 -12px;padding:12px;border-radius:14px;}
+.price-row-main{min-width:0;flex:1;}
+.price-row-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.price-row-store{font-weight:500;font-size:14px;color:#292524;}
+.price-row-country{font-size:12px;color:#a8a29e;}
+.tag-chip{font-size:12px;padding:2px 6px;border-radius:6px;background:#f5f5f4;color:#78716c;}
+.tag-chip.sale{background:#fef3c7;color:#b45309;}
+.tag-chip.bundle{background:#ecfdf5;color:#047857;}
+.badge-best{font-size:12px;padding:2px 6px;border-radius:6px;background:#ea580c;color:#fff;font-weight:500;}
+.badge-unit-best{font-size:12px;padding:2px 6px;border-radius:6px;background:#059669;color:#fff;font-weight:500;}
+.price-row-sub{font-size:12px;color:#a8a29e;margin-top:2px;}
+.price-row-date{font-size:12px;color:#d6d3d1;margin-top:2px;}
+.toggle-link{font-size:12px;color:#a8a29e;text-decoration:underline;margin-top:4px;display:inline-block;}
+.toggle-link:hover{color:#ea580c;}
+.price-row-amount{text-align:right;flex-shrink:0;}
+.price-amount{font-weight:600;color:#292524;}
+.price-amount.best{color:#ea580c;}
+.price-approx{font-size:12px;color:#a8a29e;}
+.price-unit{font-size:12px;color:#a8a29e;margin-top:2px;}
+.price-unit.best{color:#059669;font-weight:500;}
+.history-toggle{display:flex;align-items:center;gap:6px;font-size:14px;color:#a8a29e;margin-top:8px;}
+.history-toggle:hover{color:#ea580c;}
+.history-list{margin-top:12px;border:1px dashed #fed7aa;border-radius:18px;padding:0 12px;background:#fff7ed;}
+.history-list > div + div{border-top:1px solid #ffedd5;}
+.hint-box{font-size:12px;color:#047857;background:#ecfdf5;border-radius:10px;padding:8px 12px;margin-bottom:8px;}
+.cloud-status{font-size:12px;border-radius:10px;padding:10px 12px;}
+.cloud-status.on{background:#ecfdf5;color:#047857;}
+.cloud-status.off{background:#f5f5f4;color:#78716c;}
+
+.modal-overlay{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.5);}
+.modal{background:#fff;width:100%;max-width:420px;border-radius:24px 24px 0 0;max-height:90vh;overflow-y:auto;border:1px solid #ffedd5;box-shadow:0 24px 60px -12px rgba(41,37,36,0.45);}
+.modal.wide{max-width:640px;}
+.modal-header{position:sticky;top:0;background:#fff;border-bottom:1px dashed #fed7aa;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;z-index:2;}
+.modal-title{font-family:'Fraunces',serif;font-size:20px;color:#292524;}
+.modal-body{padding:24px;}
+.field{margin-bottom:16px;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.type-toggle-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.type-toggle-btn{padding:10px;border-radius:14px;font-size:14px;border:1px solid #ffedd5;background:#fff;color:#78716c;}
+.type-toggle-btn.active{background:#292524;color:#fff;border-color:#292524;}
+.submit-btn{width:100%;padding:12px;border-radius:14px;background:#ea580c;color:#fff;font-size:14px;font-weight:600;}
+.submit-btn:hover{background:#c2410c;}
+
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:60;background:#292524;color:#fff;font-size:14px;padding:10px 18px;border-radius:999px;box-shadow:0 12px 30px -8px rgba(41,37,36,0.30);max-width:calc(100vw - 96px);white-space:nowrap;}
+
+@media (min-width:640px){
+  .fab{display:none !important;}
+  .header-add-desktop{display:inline-flex !important;}
+  .grid-cols-2-sm{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media (max-width:639px){
+  .header-add-desktop{display:none !important;}
+  .fab{display:flex;}
+}
+
+/* ---------- v2 additions: toast action / last-updated / misc ---------- */
+.toast.with-action{display:flex;align-items:center;gap:14px;}
+.toast-action{color:#fdba74;font-weight:600;text-decoration:underline;white-space:nowrap;}
+.toast-action:hover{color:#fed7aa;}
+.product-updated{font-size:11px;color:#d6d3d1;margin-top:4px;}
+
+/* ---------- v3 additions: must-buy marking, recycle bin, export options ---------- */
+.icon-btn.active-star{background:#fff7ed;border-color:#ea580c;color:#ea580c;}
+.must-buy-badge{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:999px;background:#ea580c;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(41,37,36,0.25);}
+.must-buy-chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;color:#ea580c;background:#ffedd5;border-radius:999px;padding:4px 10px;margin-top:8px;width:fit-content;}
+.recycle-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid #fff7ed;}
+.recycle-item:last-child{border-bottom:none;}
+.recycle-item-title{font-size:14px;color:#292524;}
+.recycle-item-sub{font-size:11px;color:#a8a29e;margin-top:2px;}
+.recycle-actions{display:flex;gap:10px;flex-shrink:0;}
+.recycle-actions button{font-size:12px;text-decoration:underline;white-space:nowrap;}
+
+/* ---------- v4 additions: liked marking, subcategory/product ordering ---------- */
+.icon-btn.active-heart{background:#fff1f2;border-color:#e11d48;color:#e11d48;}
+.liked-badge{position:absolute;top:8px;left:8px;width:22px;height:22px;border-radius:999px;background:#e11d48;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(41,37,36,0.25);}
+.liked-chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;color:#e11d48;background:#fff1f2;border-radius:999px;padding:4px 10px;margin-top:8px;width:fit-content;}
+.order-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #fff7ed;}
+.order-row:last-child{border-bottom:none;}
+.order-row-title{font-size:14px;color:#292524;min-width:0;}
+.order-arrows{display:flex;gap:4px;flex-shrink:0;}
+.order-arrow-btn{width:28px;height:28px;border-radius:8px;border:1px solid #ffedd5;background:#fff;display:flex;align-items:center;justify-content:center;color:#78716c;}
+.order-arrow-btn:hover{border-color:#fdba74;color:#ea580c;}
+.order-arrow-btn:disabled{opacity:.3;}
+
+/* ---------- v5 additions: drag-to-reorder lists ---------- */
+.drag-list{display:flex;flex-direction:column;}
+.drag-row{display:flex;align-items:center;gap:10px;background:#fff;position:relative;touch-action:none;}
+.drag-row.dragging-row{z-index:10;box-shadow:0 8px 20px -6px rgba(41,37,36,0.3);background:#fff7ed;border-radius:10px;}
+.drag-handle{flex-shrink:0;width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:#d6d3d1;cursor:grab;touch-action:none;}
+.drag-handle:active{cursor:grabbing;color:#ea580c;}
+.drag-row-content{flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #fff7ed;}
+.drag-row:last-child .drag-row-content{border-bottom:none;}
+
+.card-field-chip{font-size:10.5px;padding:1px 7px;border-radius:999px;background:#fef3c7;color:#92400e;}
+
+.cloud-status.warn{background:#fff1f2;color:#be123c;}
+
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+/* =============================================================
+   比價行李箱 — 純原生 JS 版本（不依賴任何外部 CDN／框架）
+   ============================================================= */
+
+/* ---------------- 雲端同步設定（選填） ----------------
+   預設只存在這台裝置的瀏覽器裡（localStorage）。
+
+   想要手機、電腦同步同一份資料，用 Google 旗下的 Firebase 免費資料庫
+   （免費方案 1GB，遠大於一般使用量），照著這幾步做：
+
+   1. 到 https://console.firebase.google.com 用 Google 帳號登入，
+      點「新增專案」，名稱隨便取（例如 price-tracker），一路下一步建立完成
+   2. 左側選單找「Realtime Database」（即時資料庫），點「建立資料庫」
+      -- 地區選「新加坡 (asia-southeast1)」或離你最近的即可
+      -- 安全性規則選「以測試模式啟動」（方便，但代表知道網址的人都能讀寫，
+         僅建議用在這種非敏感的個人筆記型資料）
+   3. 建立完成後，頁面最上面會顯示一個網址，長得像：
+      https://price-tracker-xxxxx-default-rtdb.asia-southeast1.firebasedatabase.app
+      把這個網址複製下來
+   4. 把下面 FIREBASE_DB_URL 換成你複製的網址（結尾不要加斜線 /），
+      並把 CLOUD_ENABLED 改成 true
+--------------------------------------------------------------- */
+const CLOUD_ENABLED = true;
+const FIREBASE_DB_URL = 'https://price-parity-7e56a-default-rtdb.asia-southeast1.firebasedatabase.app';
+const FIREBASE_PATH = 'price-tracker-data';
+
+const STORAGE_KEY = 'gsc-price-tracker-v1';
+const APP_VERSION = '2026-10-01 v15（改用 Firebase 雲端）';
+const CURRENCIES = ['TWD', 'KRW', 'USD', 'JPY', 'CNY', 'EUR', 'HKD'];
+
+/* ---------------- 小工具：DOM 建構 & 圖示 ---------------- */
+function el(tag, props, children) {
+  props = props || {};
+  children = children || [];
+  const node = document.createElement(tag);
+  Object.keys(props).forEach((k) => {
+    const v = props[k];
+    if (v === undefined || v === null || v === false) return;
+    if (k === 'class') node.className = v;
+    else if (k === 'style' && typeof v === 'object') Object.assign(node.style, v);
+    else if (k.slice(0, 2) === 'on' && typeof v === 'function') node.addEventListener(k.slice(2).toLowerCase(), v);
+    else if (k === 'html') node.innerHTML = v;
+    else node.setAttribute(k, v);
+  });
+  (Array.isArray(children) ? children : [children]).forEach((c) => {
+    if (c === null || c === undefined || c === false) return;
+    node.appendChild(typeof c === 'string' || typeof c === 'number' ? document.createTextNode(String(c)) : c);
+  });
+  return node;
+}
+
+const SVG_NS = 'http://www.w3.org/2000/svg';
+function svgEl(tag, attrs) {
+  const node = document.createElementNS(SVG_NS, tag);
+  Object.keys(attrs || {}).forEach((k) => node.setAttribute(k, attrs[k]));
+  return node;
+}
+const ICONS = {
+  plus: () => [svgEl('line', { x1: 12, y1: 5, x2: 12, y2: 19 }), svgEl('line', { x1: 5, y1: 12, x2: 19, y2: 12 })],
+  x: () => [svgEl('line', { x1: 18, y1: 6, x2: 6, y2: 18 }), svgEl('line', { x1: 6, y1: 6, x2: 18, y2: 18 })],
+  search: () => [svgEl('circle', { cx: 11, cy: 11, r: 7 }), svgEl('line', { x1: 21, y1: 21, x2: 16.65, y2: 16.65 })],
+  settings: () => [svgEl('circle', { cx: 12, cy: 12, r: 3 }), svgEl('path', { d: 'M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 005 15a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 008.6 5c.14 0 .27.03.4.09A1.65 1.65 0 0010 3.09V3a2 2 0 114 0v.09c0 .69.4 1.32 1 1.51.13.06.26.09.4.09a1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019 9c0 .14.03.27.09.4.19.6.82 1 1.51 1H21a2 2 0 110 4h-.09c-.69 0-1.32.4-1.51 1z' })],
+  tag: () => [svgEl('path', { d: 'M12 2H2v10l9.29 9.29a2 2 0 002.83 0l6.58-6.58a2 2 0 000-2.83L12 2z' }), svgEl('circle', { cx: 7, cy: 7, r: 1.5 })],
+  history: () => [svgEl('circle', { cx: 12, cy: 12, r: 9 }), svgEl('polyline', { points: '12 7 12 12 15 14' })],
+  trash: () => [
+    svgEl('polyline', { points: '3 6 5 6 21 6' }),
+    svgEl('path', { d: 'M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6' }),
+    svgEl('path', { d: 'M10 11v6' }),
+    svgEl('path', { d: 'M14 11v6' }),
+    svgEl('path', { d: 'M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2' }),
+  ],
+  download: () => [svgEl('path', { d: 'M12 3v12' }), svgEl('polyline', { points: '7 10 12 15 17 10' }), svgEl('path', { d: 'M5 19h14' })],
+  upload: () => [svgEl('path', { d: 'M12 21V9' }), svgEl('polyline', { points: '7 14 12 9 17 14' }), svgEl('path', { d: 'M5 5h14' })],
+  droplet: () => [svgEl('path', { d: 'M12 2s7 8.5 7 13a7 7 0 11-14 0c0-4.5 7-13 7-13z' })],
+  sparkles: () => [svgEl('path', { d: 'M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2z' }), svgEl('path', { d: 'M19 15l.7 2.1L22 18l-2.1.7L19 21l-.7-2.1L16 18l2.1-.7L19 15z' })],
+  gem: () => [svgEl('path', { d: 'M6 3h12l4 6-10 12L2 9l4-6z' }), svgEl('path', { d: 'M2 9h20' }), svgEl('path', { d: 'M9 3l3 6 3-6' })],
+  shirt: () => [svgEl('path', { d: 'M16 3l-4 2-4-2-5 3 2 5h3v10h8V11h3l2-5-5-3z' })],
+  box: () => [svgEl('path', { d: 'M21 8l-9-5-9 5 9 5 9-5z' }), svgEl('path', { d: 'M3 8v8l9 5 9-5V8' }), svgEl('path', { d: 'M12 13v8' })],
+  external: () => [svgEl('path', { d: 'M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6' }), svgEl('polyline', { points: '15 3 21 3 21 9' }), svgEl('line', { x1: 10, y1: 14, x2: 21, y2: 3 })],
+  star: () => [svgEl('path', { d: 'M12 2.5l2.9 6.26 6.6.76-5 4.6 1.4 6.88L12 17.6l-5.9 3.4 1.4-6.88-5-4.6 6.6-.76L12 2.5z' })],
+  heart: () => [svgEl('path', { d: 'M12 20.5S3.5 15.2 3.5 9.2A4.7 4.7 0 0112 6.5a4.7 4.7 0 018.5 2.7c0 6-8.5 11.3-8.5 11.3z' })],
+  grip: () => [9, 15].flatMap((x) => [6, 12, 18].map((y) => svgEl('circle', { cx: x, cy: y, r: 1.4 }))),
+  arrowUp: () => [svgEl('line', { x1: 12, y1: 19, x2: 12, y2: 5 }), svgEl('polyline', { points: '6 11 12 5 18 11' })],
+  arrowDown: () => [svgEl('line', { x1: 12, y1: 5, x2: 12, y2: 19 }), svgEl('polyline', { points: '18 13 12 19 6 13' })],
+};
+function icon(name, opts) {
+  opts = opts || {};
+  const size = opts.size || 20;
+  const svg = svgEl('svg', {
+    width: size, height: size, viewBox: '0 0 24 24', fill: opts.filled ? 'currentColor' : 'none', stroke: 'currentColor',
+    'stroke-width': opts.strokeWidth || 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round',
+  });
+  if (opts.class) svg.setAttribute('class', opts.class);
+  (ICONS[name] ? ICONS[name]() : []).forEach((p) => svg.appendChild(p));
+  return svg;
+}
+
+/* ---------------- 資料 & 工具函式 ---------------- */
+function uid() { return Math.random().toString(36).slice(2, 9); }
+function daysAgo(n) { const d = new Date(); d.setDate(d.getDate() - n); return d.toISOString(); }
+function formatDate(iso) {
+  const d = new Date(iso);
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}/${pad(d.getMonth() + 1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+function compressImageFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const maxDim = 900;
+        let w = img.width, h = img.height;
+        if (w > maxDim || h > maxDim) {
+          if (w > h) { h = Math.round(h * (maxDim / w)); w = maxDim; }
+          else { w = Math.round(w * (maxDim / h)); h = maxDim; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', 0.75));
+      };
+      img.onerror = () => reject(new Error('image load failed'));
+      img.src = reader.result;
+    };
+    reader.onerror = () => reject(new Error('file read failed'));
+    reader.readAsDataURL(file);
+  });
+}
+function daysSince(iso) {
+  const then = new Date(iso).getTime();
+  const now = Date.now();
+  const diff = Math.floor((now - then) / (1000 * 60 * 60 * 24));
+  if (diff <= 0) return '今天更新';
+  return `${diff} 天前更新`;
+}
+function nowLocalInput() {
+  const d = new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+function parseCapacity(str) {
+  if (!str) return null;
+  const m = String(str).trim().match(/([\d.]+)\s*([a-zA-Z\u4e00-\u9fa5]*)/);
+  if (!m) return null;
+  const amount = parseFloat(m[1]);
+  if (isNaN(amount) || amount <= 0) return null;
+  const unit = (m[2] || '單位').trim() || '單位';
+  return { amount, unit };
+}
+function toTwd(currency, price, rates) {
+  if (currency === 'TWD') return price;
+  if (rates[currency]) return price / rates[currency];
+  return null;
+}
+function getUnitPrice(record, fallbackSpec, rates) {
+  const capacityStr = record.capacity || fallbackSpec;
+  const parsed = parseCapacity(capacityStr);
+  if (!parsed) return null;
+  const twd = toTwd(record.currency, record.price, rates);
+  if (twd == null) return null;
+  return { value: twd / parsed.amount, unit: parsed.unit };
+}
+
+const CATEGORY_ICON_NAME = { 'cat-skincare': 'droplet', 'cat-makeup': 'sparkles', 'cat-luxury': 'gem', 'cat-apparel': 'shirt' };
+function categoryIconName(id) { return CATEGORY_ICON_NAME[id] || 'box'; }
+
+function defaultData() {
+  return {
+    categories: [
+      { id: 'cat-skincare', name: '保養品', subcategories: ['化妝水', '精華', '乳霜', '面膜', '防曬'] },
+      { id: 'cat-makeup', name: '化妝品', subcategories: ['底妝', '唇彩', '眼妝', '腮紅'] },
+      { id: 'cat-luxury', name: '精品', subcategories: ['包款', '配件', '鞋履'] },
+      { id: 'cat-apparel', name: '服飾', subcategories: ['上衣', '外套', '褲裝'] },
+    ],
+    products: [
+      { id: 'prod-1', categoryId: 'cat-skincare', subcategory: '化妝水', brand: 'SK-II', name: '青春露 Facial Treatment Essence', spec: '230ml', note: '經典神仙水，適合日常保養首選單品，出國常見比價品項。', imageUrl: '', productUrl: '' },
+      { id: 'prod-2', categoryId: 'cat-makeup', subcategory: '唇彩', brand: '3CE', name: '絲絨霧面唇釉', spec: '4g', note: '韓國熱銷色號齊全，適合日常通勤妝感，Olive Young 常有優惠。', imageUrl: '', productUrl: '' },
+      { id: 'prod-3', categoryId: 'cat-skincare', subcategory: '乳霜', brand: 'La Mer', name: '精華乳霜 Crème de la Mer', spec: '30ml', note: '經典修護乳霜，日本免稅店與百貨常見比價品項。', imageUrl: '', productUrl: '' },
+    ],
+    priceRecords: [
+      { id: 'pr-1', productId: 'prod-1', country: '韓國', currency: 'KRW', store: '明洞新世界百貨', datetime: daysAgo(60), priceType: 'original', price: 189000, bundleNote: '', status: 'expired', capacity: '' },
+      { id: 'pr-2', productId: 'prod-1', country: '韓國', currency: 'KRW', store: '明洞新世界百貨', datetime: daysAgo(3), priceType: 'original', price: 199000, bundleNote: '', status: 'active', capacity: '' },
+      { id: 'pr-3', productId: 'prod-1', country: '韓國', currency: 'KRW', store: '樂天免稅店', datetime: daysAgo(5), priceType: 'sale', price: 175000, bundleNote: '滿額贈化妝包', status: 'active', capacity: '' },
+      { id: 'pr-4', productId: 'prod-1', country: '台灣', currency: 'TWD', store: 'SOGO 百貨專櫃', datetime: daysAgo(10), priceType: 'original', price: 4680, bundleNote: '', status: 'active', capacity: '' },
+      { id: 'pr-11', productId: 'prod-1', country: '台灣', currency: 'TWD', store: '網路商店（大容量組）', datetime: daysAgo(1), priceType: 'original', price: 8200, bundleNote: '', status: 'active', capacity: '500ml' },
+      { id: 'pr-5', productId: 'prod-2', country: '韓國', currency: 'KRW', store: 'Olive Young 明洞店', datetime: daysAgo(2), priceType: 'original', price: 19000, bundleNote: '', status: 'active', capacity: '' },
+      { id: 'pr-6', productId: 'prod-2', country: '韓國', currency: 'KRW', store: 'Olive Young 明洞店', datetime: daysAgo(2), priceType: 'sale', price: 15000, bundleNote: '第二件 6 折', status: 'active', capacity: '' },
+      { id: 'pr-7', productId: 'prod-2', country: '台灣', currency: 'TWD', store: '蝦皮代購賣場', datetime: daysAgo(15), priceType: 'original', price: 550, bundleNote: '', status: 'active', capacity: '' },
+      { id: 'pr-8', productId: 'prod-3', country: '日本', currency: 'JPY', store: '大阪高島屋', datetime: daysAgo(40), priceType: 'original', price: 25000, bundleNote: '', status: 'expired', capacity: '' },
+      { id: 'pr-9', productId: 'prod-3', country: '日本', currency: 'JPY', store: '大阪高島屋', datetime: daysAgo(4), priceType: 'original', price: 28000, bundleNote: '', status: 'active', capacity: '' },
+      { id: 'pr-10', productId: 'prod-3', country: '台灣', currency: 'TWD', store: 'SOGO 百貨專櫃', datetime: daysAgo(8), priceType: 'original', price: 6980, bundleNote: '', status: 'active', capacity: '' },
+    ],
+    exchangeRates: { KRW: 42, JPY: 4.7, USD: 0.031, CNY: 0.225, EUR: 0.029 },
+    recycle: [],
+  };
+}
+
+/* ---------------- 儲存層：本機（一定會存） + 雲端（選用） ---------------- */
+function localLoad() {
+  try { const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : null; } catch (e) { return null; }
+}
+function localSave(data) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, quotaExceeded: e && (e.name === 'QuotaExceededError' || e.code === 22 || e.code === 1014) };
+  }
+}
+function isValidData(d) {
+  return !!d && Array.isArray(d.categories) && Array.isArray(d.products) && Array.isArray(d.priceRecords);
+}
+async function cloudLoad() {
+  if (!CLOUD_ENABLED) return null;
+  try {
+    const res = await fetch(`${FIREBASE_DB_URL}/${FIREBASE_PATH}.json`);
+    if (!res.ok) return null;
+    const json = await res.json();
+    // 資料庫剛建立時是空的（null），這種「格式不對」的內容視同沒有資料，
+    // 改用本機資料，避免第一次開雲端同步時，本機原有的資料被空白蓋掉。
+    return isValidData(json) ? json : null;
+  } catch (e) { return null; }
+}
+async function cloudSave(data) {
+  if (!CLOUD_ENABLED) return false;
+  try {
+    const res = await fetch(`${FIREBASE_DB_URL}/${FIREBASE_PATH}.json`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    return res.ok;
+  } catch (e) { return false; }
+}
+
+/* ---------------- 全域狀態 ---------------- */
+const state = {
+  data: null,
+  loading: true,
+  activeCategoryId: null,
+  filters: { subcategory: 'all', brand: 'all', search: '', custom: {}, sort: 'default' },
+  categoryAdding: false,
+  selectedProductId: null,
+  showHistory: false,
+  addProductPreset: null,
+  showAddPriceFor: null,
+  showSettings: false,
+  showMustBuyOnly: false,
+  showLikedOnly: false,
+  toast: null,
+};
+let toastTimer = null;
+
+const STORAGE_WARN_BYTES = 3.5 * 1024 * 1024;
+let storageWarnedThisSession = false;
+function checkStorageWarning() {
+  if (storageWarnedThisSession) return;
+  try {
+    const totalBytes = new Blob([JSON.stringify(state.data)]).size;
+    if (totalBytes > STORAGE_WARN_BYTES) {
+      storageWarnedThisSession = true;
+      showToast('⚠️ 儲存空間快滿了，建議到設定頁清理照片或回收桶');
+    }
+  } catch (e) { /* ignore */ }
+}
+
+function persistData() {
+  const result = localSave(state.data);
+  if (!result.ok) {
+    /* 這是真的存檔失敗、不是裝飾用的提示，所以用會擋住操作的 alert，
+       確保使用者一定會看到，不會像之前一樣「默默存檔失敗」卻沒人知道。 */
+    const msg = result.quotaExceeded
+      ? '⚠️ 儲存失敗：瀏覽器的儲存空間已滿！\n\n剛剛這個修改沒有真的存進去，重新整理就會消失。\n\n請馬上到設定頁「匯出 JSON」備份目前畫面上看到的資料，然後清理一些商品照片或回收桶騰出空間。'
+      : '⚠️ 儲存失敗，剛剛這個修改可能沒有存進去。\n\n建議馬上到設定頁「匯出 JSON」備份，避免資料遺失。';
+    alert(msg);
+  } else {
+    checkStorageWarning();
+  }
+  if (CLOUD_ENABLED) {
+    cloudSave(state.data).then((ok) => { if (!ok) showToast('雲端同步失敗，已先儲存在本機'); });
+  }
+}
+
+/* ---------------- 回收桶：刪除的商品／價格紀錄會先放這裡 30 天，之後自動清除 ---------------- */
+const RECYCLE_RETENTION_DAYS = 30;
+function moveToRecycle(entry) {
+  if (!state.data.recycle) state.data.recycle = [];
+  const full = Object.assign({ id: 'rc-' + uid(), deletedAt: new Date().toISOString() }, entry);
+  state.data.recycle.push(full);
+  return full;
+}
+function purgeOldRecycle() {
+  if (!state.data.recycle) { state.data.recycle = []; return; }
+  const cutoff = Date.now() - RECYCLE_RETENTION_DAYS * 24 * 60 * 60 * 1000;
+  state.data.recycle = state.data.recycle.filter((e) => new Date(e.deletedAt).getTime() > cutoff);
+}
+function restoreRecycleEntry(id) {
+  const entry = (state.data.recycle || []).find((e) => e.id === id);
+  if (!entry) return;
+  state.data.recycle = state.data.recycle.filter((e) => e.id !== id);
+  if (entry.type === 'product') {
+    state.data.products.push(entry.product);
+    state.data.priceRecords = state.data.priceRecords.concat(entry.priceRecords || []);
+  } else if (entry.type === 'priceRecord') {
+    state.data.priceRecords.push(entry.record);
+  } else if (entry.type === 'category') {
+    state.data.categories.push(entry.category);
+    state.data.products = state.data.products.concat(entry.products || []);
+    state.data.priceRecords = state.data.priceRecords.concat(entry.priceRecords || []);
+  }
+  persistData();
+  renderCategoryTabs();
+  renderMain();
+  if (state.selectedProductId) renderOverlay();
+}
+
+function deleteCategoryWithContents(categoryId) {
+  if (state.data.categories.length <= 1) { showToast('至少要保留一個分類'); return null; }
+  const cat = state.data.categories.find((c) => c.id === categoryId);
+  if (!cat) return null;
+  const prods = state.data.products.filter((p) => p.categoryId === categoryId);
+  const prodIds = prods.map((p) => p.id);
+  const recs = state.data.priceRecords.filter((r) => prodIds.indexOf(r.productId) !== -1);
+  state.data.categories = state.data.categories.filter((c) => c.id !== categoryId);
+  state.data.products = state.data.products.filter((p) => p.categoryId !== categoryId);
+  state.data.priceRecords = state.data.priceRecords.filter((r) => prodIds.indexOf(r.productId) === -1);
+  const entry = moveToRecycle({ type: 'category', category: cat, products: prods, priceRecords: recs });
+  if (state.activeCategoryId === categoryId) {
+    state.activeCategoryId = state.data.categories[0] ? state.data.categories[0].id : null;
+    state.filters = { subcategory: 'all', brand: 'all', search: '', custom: {}, sort: 'default' };
+  }
+  persistData();
+  return entry;
+}
+function permanentlyDeleteRecycleEntry(id) {
+  state.data.recycle = (state.data.recycle || []).filter((e) => e.id !== id);
+  persistData();
+}
+
+/* ---------------- 可拖曳排序清單（手機觸控／滑鼠都適用） ----------------
+   keys: 目前順序的 id 陣列
+   renderRowContent(key, index): 回傳這一列中「握把以外」要顯示的內容 DOM
+   onCommit(newOrderKeys): 拖曳放開、順序確定改變時呼叫，用來真正寫回資料
+   ------------------------------------------------------------------- */
+function buildDragList(keys, renderRowContent, onCommit) {
+  const container = el('div', { class: 'drag-list' });
+  let order = keys.slice();
+
+  function buildRow(key) {
+    const row = el('div', { class: 'order-row drag-row' });
+    row.dataset.key = key;
+    const handle = el('div', { class: 'drag-handle' }, icon('grip', { size: 16, filled: true, strokeWidth: 0 }));
+    const content = renderRowContent(key);
+    row.appendChild(handle);
+    row.appendChild(content);
+    wireDrag(row, handle, key);
+    return row;
+  }
+
+  function renderAll() {
+    container.innerHTML = '';
+    order.forEach((k) => container.appendChild(buildRow(k)));
+  }
+
+  function wireDrag(row, handle, key) {
+    handle.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      handle.setPointerCapture(e.pointerId);
+      row.classList.add('dragging-row');
+      const rowHeight = row.offsetHeight;
+      let lastY = e.clientY;
+      let curY = 0;
+      let changed = false;
+
+      function onMove(ev) {
+        const dy = ev.clientY - lastY;
+        lastY = ev.clientY;
+        curY += dy;
+        let idx = order.indexOf(key);
+        while (curY > rowHeight / 2 && idx < order.length - 1) {
+          order[idx] = order[idx + 1]; order[idx + 1] = key;
+          container.insertBefore(container.children[idx + 1], row);
+          curY -= rowHeight; idx++; changed = true;
+        }
+        while (curY < -rowHeight / 2 && idx > 0) {
+          order[idx] = order[idx - 1]; order[idx - 1] = key;
+          container.insertBefore(row, container.children[idx - 1]);
+          curY += rowHeight; idx--; changed = true;
+        }
+        row.style.transform = `translateY(${curY}px)`;
+      }
+      function onUp(ev) {
+        handle.releasePointerCapture(ev.pointerId);
+        handle.removeEventListener('pointermove', onMove);
+        handle.removeEventListener('pointerup', onUp);
+        handle.removeEventListener('pointercancel', onUp);
+        row.classList.remove('dragging-row');
+        row.style.transform = '';
+        if (changed) onCommit(order.slice());
+      }
+      handle.addEventListener('pointermove', onMove);
+      handle.addEventListener('pointerup', onUp);
+      handle.addEventListener('pointercancel', onUp);
+    });
+  }
+
+  renderAll();
+  return container;
+}
+
+/* ---------------- 手動排序：次分類順序、以及同次分類內商品的順序 ---------------- */
+function moveSubcategoryAmongUsed(categoryId, usedList, subName, direction) {
+  const idx = usedList.indexOf(subName);
+  const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
+  if (idx < 0 || swapIdx < 0 || swapIdx >= usedList.length) return;
+  const other = usedList[swapIdx];
+  state.data.categories = state.data.categories.map((c) => {
+    if (c.id !== categoryId) return c;
+    const arr = c.subcategories.slice();
+    const i = arr.indexOf(subName);
+    const j = arr.indexOf(other);
+    if (i === -1 || j === -1) return c;
+    const tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+    return Object.assign({}, c, { subcategories: arr });
+  });
+  persistData();
+}
+function moveProductWithinSubcategory(productId, direction) {
+  const arr = state.data.products;
+  const product = arr.find((p) => p.id === productId);
+  if (!product) return;
+  const siblingIdx = [];
+  arr.forEach((p, i) => { if (p.categoryId === product.categoryId && p.subcategory === product.subcategory) siblingIdx.push(i); });
+  const posInSiblings = siblingIdx.indexOf(arr.indexOf(product));
+  const swapWith = direction === 'up' ? posInSiblings - 1 : posInSiblings + 1;
+  if (swapWith < 0 || swapWith >= siblingIdx.length) return;
+  const i = siblingIdx[posInSiblings];
+  const j = siblingIdx[swapWith];
+  const tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+  persistData();
+}
+function setSubcategoryOrderAmongUsed(categoryId, usedList, newOrder) {
+  state.data.categories = state.data.categories.map((c) => {
+    if (c.id !== categoryId) return c;
+    const arr = c.subcategories.slice();
+    const positions = [];
+    arr.forEach((s, i) => { if (usedList.indexOf(s) !== -1) positions.push(i); });
+    positions.forEach((pos, idx) => { arr[pos] = newOrder[idx]; });
+    return Object.assign({}, c, { subcategories: arr });
+  });
+  persistData();
+}
+function setProductOrderWithinSubcategory(categoryId, subcategory, newOrderIds) {
+  const arr = state.data.products;
+  const positions = [];
+  arr.forEach((p, i) => { if (p.categoryId === categoryId && p.subcategory === subcategory) positions.push(i); });
+  const idToProduct = {};
+  newOrderIds.forEach((id) => { idToProduct[id] = arr.find((p) => p.id === id); });
+  positions.forEach((pos, idx) => { arr[pos] = idToProduct[newOrderIds[idx]]; });
+  persistData();
+}
+
+function showToast(msg, action) {
+  state.toast = { msg, action };
+  renderToast();
+  clearTimeout(toastTimer);
+  const duration = action ? 5000 : 2200;
+  toastTimer = setTimeout(() => { state.toast = null; renderToast(); }, duration);
+}
+
+/* ---------------- DOM 容器（一次建立，之後只更新內容） ---------------- */
+let refs = {};
+
+function buildShell() {
+  const root = document.getElementById('root');
+  root.innerHTML = '';
+
+  const header = el('header', { class: 'app-header' });
+  header.appendChild(el('div', { class: 'accent-rule' }));
+
+  const headerRow = el('div', { class: 'header-row' });
+  const brand = el('div', { class: 'brand' }, [
+    el('div', { class: 'brand-badge' }, icon('tag', { size: 15 })),
+    el('div', {}, [
+      el('div', { class: 'brand-title font-display' }, '比價行李箱'),
+      el('div', { class: 'brand-sub' }, '全球購物比價與歷史價格追蹤'),
+    ]),
+  ]);
+  const settingsBtn = el('button', { class: 'icon-btn', onclick: () => { state.showSettings = true; renderOverlay(); } }, icon('settings', { size: 18 }));
+  const mustBuyBtn = el('button', {
+    class: 'icon-btn',
+    onclick: () => {
+      state.showMustBuyOnly = !state.showMustBuyOnly;
+      if (state.showMustBuyOnly) { state.showLikedOnly = false; state.filters.search = ''; refs.searchInput.value = ''; }
+      updateViewToggleBtns();
+      renderMain();
+    },
+  }, icon('star', { size: 18 }));
+  const likedBtn = el('button', {
+    class: 'icon-btn',
+    onclick: () => {
+      state.showLikedOnly = !state.showLikedOnly;
+      if (state.showLikedOnly) { state.showMustBuyOnly = false; state.filters.search = ''; refs.searchInput.value = ''; }
+      updateViewToggleBtns();
+      renderMain();
+    },
+  }, icon('heart', { size: 18 }));
+  const addBtn = el('button', {
+    class: 'btn btn-primary header-add-desktop', style: { display: 'none', borderRadius: '999px' },
+    onclick: () => { state.addProductPreset = {}; renderOverlay(); },
+  }, [icon('plus', { size: 16 }), '新增商品']);
+  headerRow.appendChild(brand);
+  headerRow.appendChild(el('div', { class: 'flex gap-2 items-center' }, [mustBuyBtn, likedBtn, settingsBtn, addBtn]));
+  header.appendChild(headerRow);
+
+  const searchWrap = el('div', { class: 'search-wrap' });
+  const searchIcon = icon('search', { size: 15, class: 'search-icon' });
+  const searchInput = el('input', {
+    class: 'search-input', placeholder: '名稱、品牌、次分類',
+    oninput: (e) => {
+      state.filters.search = e.target.value;
+      if ((state.showMustBuyOnly || state.showLikedOnly) && e.target.value.trim()) {
+        state.showMustBuyOnly = false; state.showLikedOnly = false; updateViewToggleBtns();
+      }
+      renderMain();
+    },
+  });
+  searchInput.value = state.filters.search;
+  searchWrap.appendChild(searchIcon);
+  searchWrap.appendChild(searchInput);
+  header.appendChild(searchWrap);
+
+  const categoryTabsContainer = el('div', { class: 'category-tabs' });
+  header.appendChild(categoryTabsContainer);
+
+  const filterRowContainer = el('div', { class: 'filter-row' });
+  header.appendChild(filterRowContainer);
+
+  const main = el('main', { class: 'main' });
+  const fab = el('button', { class: 'fab', onclick: () => { state.addProductPreset = {}; renderOverlay(); } }, icon('plus', { size: 24 }));
+  const overlayRoot = el('div', { id: 'overlay-root' });
+  const toastRoot = el('div', { id: 'toast-root' });
+
+  root.appendChild(header);
+  root.appendChild(main);
+  root.appendChild(fab);
+  root.appendChild(overlayRoot);
+  root.appendChild(toastRoot);
+
+  refs = { header, categoryTabsContainer, filterRowContainer, main, searchInput, overlayRoot, toastRoot, mustBuyBtn, likedBtn };
+  updateViewToggleBtns();
+}
+
+function updateViewToggleBtns() {
+  if (refs.mustBuyBtn) {
+    refs.mustBuyBtn.innerHTML = '';
+    refs.mustBuyBtn.appendChild(icon('star', { size: 18, filled: state.showMustBuyOnly }));
+    refs.mustBuyBtn.classList.toggle('active-star', !!state.showMustBuyOnly);
+  }
+  if (refs.likedBtn) {
+    refs.likedBtn.innerHTML = '';
+    refs.likedBtn.appendChild(icon('heart', { size: 18, filled: state.showLikedOnly }));
+    refs.likedBtn.classList.toggle('active-heart', !!state.showLikedOnly);
+  }
+}
+
+/* ---------------- 分類籤 ---------------- */
+function renderCategoryTabs() {
+  const c = refs.categoryTabsContainer;
+  c.innerHTML = '';
+  state.data.categories.forEach((cat) => {
+    const active = cat.id === state.activeCategoryId;
+    const btn = el('button', {
+      class: 'category-tab' + (active ? ' active' : ''),
+      onclick: () => {
+        state.activeCategoryId = cat.id;
+        state.filters = { subcategory: 'all', brand: 'all', search: '', custom: {}, sort: 'default' };
+        state.showMustBuyOnly = false;
+        state.showLikedOnly = false;
+        refs.searchInput.value = '';
+        updateViewToggleBtns();
+        renderCategoryTabs();
+        renderMain();
+      },
+    }, [
+      icon(categoryIconName(cat.id), { size: 20, strokeWidth: 1.8, class: 'cat-icon' }),
+      el('span', { class: 'category-tab-label' }, cat.name),
+    ]);
+    c.appendChild(btn);
+  });
+
+  if (state.categoryAdding) {
+    const input = el('input', { class: 'cat-add-input', placeholder: '分類名稱' });
+    const form = el('form', {
+      class: 'flex gap-2 items-center',
+      onsubmit: (e) => {
+        e.preventDefault();
+        const name = input.value.trim();
+        if (!name) return;
+        state.data.categories.push({ id: 'cat-' + uid(), name, subcategories: [] });
+        state.categoryAdding = false;
+        persistData();
+        renderCategoryTabs();
+        showToast('已新增分類：' + name);
+      },
+    }, [
+      input,
+      el('button', { type: 'submit', class: 'btn btn-primary', style: { padding: '6px 12px', fontSize: '12px' } }, '新增'),
+      el('button', { type: 'button', class: 'text-faint text-xs', onclick: () => { state.categoryAdding = false; renderCategoryTabs(); } }, '取消'),
+    ]);
+    c.appendChild(form);
+    setTimeout(() => input.focus(), 0);
+  } else {
+    c.appendChild(el('button', {
+      class: 'category-tab-add', onclick: () => { state.categoryAdding = true; renderCategoryTabs(); },
+    }, [icon('plus', { size: 20, strokeWidth: 1.8 }), el('span', { class: 'category-tab-label' }, '新增')]));
+  }
+}
+
+/* ---------------- 主要內容（篩選列 + 分組商品清單） ---------------- */
+function getBestActivePrice(productId) {
+  const actives = state.data.priceRecords.filter((r) => r.productId === productId && r.status === 'active');
+  if (actives.length === 0) return null;
+  let best = null; let bestTwd = Infinity;
+  actives.forEach((r) => {
+    const twd = toTwd(r.currency, r.price, state.data.exchangeRates);
+    const cmp = twd == null ? Infinity : twd;
+    if (cmp < bestTwd) { bestTwd = cmp; best = Object.assign({}, r, { approxTwd: twd }); }
+  });
+  return best;
+}
+
+function getLatestActiveDate(productId) {
+  const actives = state.data.priceRecords.filter((r) => r.productId === productId && r.status === 'active');
+  if (actives.length === 0) return null;
+  return actives.reduce((a, b) => (new Date(a.datetime) > new Date(b.datetime) ? a : b)).datetime;
+}
+
+function buildProductCard(product) {
+  const best = getBestActivePrice(product.id);
+  const latestDate = getLatestActiveDate(product.id);
+  const thumb = el('div', { class: 'product-thumb' },
+    product.imageUrl ? el('img', { src: product.imageUrl, alt: product.name }) : icon('tag', { size: 22, class: 'text-orange-200' })
+  );
+  const category = state.data.categories.find((c) => c.id === product.categoryId);
+  const cardFields = ((category && category.customFields) || []).filter((f) => f.showOnCard && (product.customValues || {})[f.id]);
+  const info = el('div', { class: 'product-info' }, [
+    el('div', { class: 'product-brand' }, product.brand),
+    el('div', { class: 'product-name font-display' }, product.name),
+    el('div', { class: 'product-spec' }, product.spec),
+    cardFields.length > 0
+      ? el('div', { class: 'flex gap-1', style: { flexWrap: 'wrap', marginTop: '4px' } },
+        cardFields.map((f) => el('span', { class: 'card-field-chip' }, (product.customValues || {})[f.id])))
+      : null,
+    el('div', { class: 'product-updated' }, latestDate ? daysSince(latestDate) : '尚無報價'),
+  ]);
+  let badgeWrap;
+  if (best) {
+    badgeWrap = el('div', { class: 'price-badge-wrap' }, [
+      el('div', { class: 'price-badge' }, [
+        el('span', { class: 'price-badge-currency tabular' }, best.currency),
+        el('span', { class: 'price-badge-label' }, '最低價'),
+      ]),
+      el('div', { class: 'price-badge-sub tabular' },
+        best.approxTwd != null && best.currency !== 'TWD'
+          ? [best.price.toLocaleString(), el('br'), `≈NT$${Math.round(best.approxTwd).toLocaleString()}`]
+          : best.price.toLocaleString()
+      ),
+    ]);
+  } else {
+    badgeWrap = el('div', { class: 'price-badge-wrap' }, el('div', { class: 'price-badge-empty' }, '無資料'));
+  }
+  const children = [thumb, info, badgeWrap];
+  if (product.mustBuy) {
+    children.push(el('div', { class: 'must-buy-badge' }, icon('star', { size: 12, filled: true })));
+  }
+  if (product.liked) {
+    children.push(el('div', { class: 'liked-badge' }, icon('heart', { size: 12, filled: true })));
+  }
+  return el('button', {
+    class: 'product-card',
+    onclick: () => { state.selectedProductId = product.id; state.showHistory = false; renderOverlay(); },
+  }, children);
+}
+
+function renderMain() {
+  const searching = state.filters.search.trim().length > 0;
+  const crossMode = searching || state.showMustBuyOnly || state.showLikedOnly;
+  const cat = state.data.categories.find((c) => c.id === state.activeCategoryId);
+  const subcatOptions = cat ? cat.subcategories : [];
+  const customFields = (cat && cat.customFields) || [];
+  const categoryProducts = state.data.products.filter((p) => p.categoryId === state.activeCategoryId);
+  const brandOptions = Array.from(new Set(categoryProducts.map((p) => p.brand))).sort();
+
+  /* 次分類篩選選項：只列出「目前這個分類裡還有商品在用」的次分類，用不到的不會出現在篩選裡 */
+  const usedSubcats = Array.from(new Set(categoryProducts.map((p) => p.subcategory).filter(Boolean)));
+  const subcatFilterOptions = subcatOptions.filter((s) => usedSubcats.indexOf(s) !== -1)
+    .concat(usedSubcats.filter((s) => subcatOptions.indexOf(s) === -1));
+
+  /* 可篩選的自訂欄位：同樣只列出目前分類裡實際有填值的選項 */
+  const filterableFields = customFields.filter((f) => f.filterable).map((f) => {
+    const values = Array.from(new Set(categoryProducts.map((p) => (p.customValues || {})[f.id]).filter(Boolean)));
+    return { field: f, values };
+  }).filter((x) => x.values.length > 0);
+
+  let filtered;
+  if (searching) {
+    const q = state.filters.search.trim().toLowerCase();
+    filtered = state.data.products.filter((p) => p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q));
+  } else if (state.showMustBuyOnly) {
+    filtered = state.data.products.filter((p) => p.mustBuy);
+  } else if (state.showLikedOnly) {
+    filtered = state.data.products.filter((p) => p.liked);
+  } else {
+    filtered = categoryProducts.filter((p) => {
+      if (state.filters.subcategory !== 'all' && p.subcategory !== state.filters.subcategory) return false;
+      if (state.filters.brand !== 'all' && p.brand !== state.filters.brand) return false;
+      for (const { field } of filterableFields) {
+        const wanted = state.filters.custom[field.id];
+        if (wanted && wanted !== 'all' && (p.customValues || {})[field.id] !== wanted) return false;
+      }
+      return true;
+    });
+  }
+
+  /* filter row：跨分類模式（搜尋／必買清單）時隱藏，因為這些下拉是綁在目前分類的 */
+  refs.filterRowContainer.innerHTML = '';
+  refs.filterRowContainer.style.display = crossMode ? 'none' : '';
+  if (!crossMode) {
+    const subSelect = el('select', {
+      class: 'filter-select',
+      onchange: (e) => { state.filters.subcategory = e.target.value; renderMain(); },
+    }, [el('option', { value: 'all' }, '全部次分類')].concat(subcatFilterOptions.map((s) => el('option', { value: s }, s))));
+    subSelect.value = state.filters.subcategory;
+    const brandSelect = el('select', {
+      class: 'filter-select',
+      onchange: (e) => { state.filters.brand = e.target.value; renderMain(); },
+    }, [el('option', { value: 'all' }, '全部品牌')].concat(brandOptions.map((b) => el('option', { value: b }, b))));
+    brandSelect.value = state.filters.brand;
+    refs.filterRowContainer.appendChild(subSelect);
+    refs.filterRowContainer.appendChild(brandSelect);
+    filterableFields.forEach(({ field, values }) => {
+      const sel = el('select', {
+        class: 'filter-select',
+        onchange: (e) => { state.filters.custom[field.id] = e.target.value; renderMain(); },
+      }, [el('option', { value: 'all' }, `全部${field.label}`)].concat(values.map((v) => el('option', { value: v }, v))));
+      sel.value = state.filters.custom[field.id] || 'all';
+      refs.filterRowContainer.appendChild(sel);
+    });
+  }
+  const sortSelect = el('select', {
+    class: 'filter-select',
+    onchange: (e) => { state.filters.sort = e.target.value; renderMain(); },
+  }, [
+    el('option', { value: 'default' }, '預設順序'),
+    el('option', { value: 'priceAsc' }, '價格由低到高'),
+    el('option', { value: 'updated' }, '最近更新優先'),
+  ]);
+  sortSelect.value = state.filters.sort;
+  refs.filterRowContainer.appendChild(sortSelect);
+
+  /* 分組：跨分類模式（搜尋／必買清單）依「大分類」分組，平常依「次分類」分組（僅目前分類） */
+  refs.main.innerHTML = '';
+  let groups;
+  if (crossMode) {
+    const byCat = {};
+    filtered.forEach((p) => {
+      const c = state.data.categories.find((cc) => cc.id === p.categoryId);
+      const k = c ? c.name : '未分類';
+      (byCat[k] = byCat[k] || []).push(p);
+    });
+    groups = Object.keys(byCat).map((k) => ({ name: k, items: byCat[k], addable: false }));
+    if (searching) {
+      refs.main.appendChild(el('p', { class: 'text-xs text-faint mb3' }, `「${state.filters.search.trim()}」的搜尋結果（跨全部分類） · 共 ${filtered.length} 件`));
+    } else if (state.showMustBuyOnly) {
+      refs.main.appendChild(el('div', { class: 'flex items-center gap-2 mb3' }, [
+        icon('star', { size: 15, filled: true, class: 'text-orange-600' }),
+        el('span', { class: 'text-xs text-faint' }, `必買清單（跨全部分類） · 共 ${filtered.length} 件`),
+      ]));
+    } else {
+      refs.main.appendChild(el('div', { class: 'flex items-center gap-2 mb3' }, [
+        icon('heart', { size: 15, filled: true, class: 'text-rose-600' }),
+        el('span', { class: 'text-xs text-faint' }, `用過喜歡清單（跨全部分類） · 共 ${filtered.length} 件`),
+      ]));
+    }
+  } else {
+    const bySub = {};
+    filtered.forEach((p) => { const k = p.subcategory || '未分類'; (bySub[k] = bySub[k] || []).push(p); });
+    const orderedKeys = subcatOptions.concat(Object.keys(bySub).filter((k) => subcatOptions.indexOf(k) === -1));
+    groups = orderedKeys.filter((k) => bySub[k] && bySub[k].length > 0).map((k) => ({ name: k, items: bySub[k], addable: true }));
+  }
+
+  if (!crossMode && state.filters.sort !== 'default') {
+    groups.forEach((g) => {
+      if (state.filters.sort === 'priceAsc') {
+        g.items = g.items.slice().sort((a, b) => {
+          const pa = getBestActivePrice(a.id); const pb = getBestActivePrice(b.id);
+          const va = pa ? (pa.approxTwd != null ? pa.approxTwd : pa.price) : Infinity;
+          const vb = pb ? (pb.approxTwd != null ? pb.approxTwd : pb.price) : Infinity;
+          return va - vb;
+        });
+      } else if (state.filters.sort === 'updated') {
+        g.items = g.items.slice().sort((a, b) => {
+          const da = getLatestActiveDate(a.id); const db = getLatestActiveDate(b.id);
+          return (db ? new Date(db).getTime() : 0) - (da ? new Date(da).getTime() : 0);
+        });
+      }
+    });
+  }
+
+  if (groups.length === 0) {
+    let emptyMsg = '這個分類目前沒有符合條件的商品';
+    if (searching) emptyMsg = '找不到符合的商品';
+    else if (state.showMustBuyOnly) emptyMsg = '目前沒有標記「必買」的商品';
+    else if (state.showLikedOnly) emptyMsg = '目前沒有標記「用過喜歡」的商品';
+    refs.main.appendChild(el('div', { class: 'empty-state' }, [
+      icon(state.showMustBuyOnly ? 'star' : (state.showLikedOnly ? 'heart' : 'tag'), { size: 28, class: 'text-orange-200' }),
+      el('p', { class: 'text-sm mt2' }, emptyMsg),
+      !crossMode ? el('button', {
+        class: 'text-orange-600 text-sm font-medium underline mt2',
+        onclick: () => { state.addProductPreset = {}; renderOverlay(); },
+      }, '新增第一筆商品') : null,
+    ]));
+    return;
+  }
+  groups.forEach((g) => {
+    const headerChildren = [
+      el('div', { class: 'section-title-wrap' }, [
+        el('h3', { class: 'section-title font-display' }, g.name),
+        el('span', { class: 'section-count' }, `${g.items.length} 件`),
+      ]),
+    ];
+    if (g.addable) {
+      headerChildren.push(el('button', {
+        class: 'section-add-btn',
+        onclick: () => { state.addProductPreset = { subcategory: g.name }; renderOverlay(); },
+      }, icon('plus', { size: 15 })));
+    }
+    const sectionHeader = el('div', { class: 'section-header' }, headerChildren);
+    const list = el('div', { class: 'product-list' }, g.items.map(buildProductCard));
+    refs.main.appendChild(el('div', { class: 'section' }, [sectionHeader, list]));
+  });
+}
+
+/* ---------------- 價格列（drawer 內共用） ---------------- */
+function buildPriceRow(record, opts) {
+  const rates = state.data.exchangeRates;
+  const approx = record.currency !== 'TWD' && rates[record.currency] ? record.price / rates[record.currency] : null;
+  const unitPrice = getUnitPrice(record, opts.productSpec, rates);
+  const typeLabel = { original: '定價', sale: '特價', bundle: '組合價' }[record.priceType];
+  const typeClass = { original: 'tag-chip', sale: 'tag-chip sale', bundle: 'tag-chip bundle' }[record.priceType];
+  const capacityLabel = record.capacity || opts.productSpec;
+
+  const top = el('div', { class: 'price-row-top' }, [
+    el('span', { class: 'price-row-store' }, record.store),
+    el('span', { class: 'price-row-country' }, record.country),
+    el('span', { class: typeClass }, typeLabel),
+  ]);
+  if (opts.isBestTotal) top.appendChild(el('span', { class: 'badge-best' }, '最低價'));
+  if (opts.isBestUnit && !opts.isBestTotal) top.appendChild(el('span', { class: 'badge-unit-best' }, '單位最划算'));
+
+  const mainCol = el('div', { class: 'price-row-main' }, [top]);
+  if (capacityLabel) mainCol.appendChild(el('div', { class: 'price-row-sub' }, `容量：${capacityLabel}`));
+  if (record.bundleNote) mainCol.appendChild(el('div', { class: 'price-row-sub' }, `備註：${record.bundleNote}`));
+  mainCol.appendChild(el('div', { class: 'price-row-date' }, formatDate(record.datetime)));
+  const linkRow = el('div', { class: 'flex gap-3', style: { flexWrap: 'wrap' } });
+  if (opts.onToggleStatus) linkRow.appendChild(el('button', { class: 'toggle-link', onclick: opts.onToggleStatus }, opts.actionLabel));
+  if (opts.onEdit) linkRow.appendChild(el('button', { class: 'toggle-link', onclick: opts.onEdit }, '編輯'));
+  if (opts.onDelete) linkRow.appendChild(el('button', { class: 'toggle-link', style: { color: '#e11d48' }, onclick: opts.onDelete }, '刪除'));
+  if (linkRow.children.length > 0) mainCol.appendChild(linkRow);
+
+  const amountCol = el('div', { class: 'price-row-amount' }, [
+    el('div', { class: 'price-amount tabular' + (opts.isBestTotal ? ' best' : '') }, `${record.currency} ${record.price.toLocaleString()}`),
+  ]);
+  if (approx != null) amountCol.appendChild(el('div', { class: 'price-approx tabular' }, `≈NT$${Math.round(approx).toLocaleString()}`));
+  if (unitPrice) {
+    amountCol.appendChild(el('div', { class: 'price-unit tabular' + (opts.isBestUnit ? ' best' : '') }, `每${unitPrice.unit} NT$${unitPrice.value.toFixed(1)}`));
+  }
+
+  return el('div', { class: 'price-row' + (opts.isBestTotal ? ' best' : '') }, [mainCol, amountCol]);
+}
+
+/* ---------------- 商品詳情抽屜 ---------------- */
+function buildDrawer(product) {
+  const category = state.data.categories.find((c) => c.id === product.categoryId);
+  const records = state.data.priceRecords.filter((r) => r.productId === product.id);
+  const active = records.filter((r) => r.status === 'active');
+  const history = records.filter((r) => r.status === 'expired');
+  const rates = state.data.exchangeRates;
+
+  const withMetrics = active.map((r) => Object.assign({}, r, {
+    approxTwd: toTwd(r.currency, r.price, rates),
+    unitPrice: getUnitPrice(r, product.spec, rates),
+  }));
+  const withTwd = withMetrics.slice().sort((a, b) => (a.approxTwd ?? Infinity) - (b.approxTwd ?? Infinity));
+  const bestTotalId = withTwd[0] ? withTwd[0].id : null;
+  const unitComparable = withMetrics.filter((r) => r.unitPrice);
+  const bestUnitId = unitComparable.length > 0
+    ? unitComparable.reduce((a, b) => (a.unitPrice.value <= b.unitPrice.value ? a : b)).id
+    : null;
+  const sortedHistory = history.slice().sort((a, b) => new Date(b.datetime) - new Date(a.datetime));
+
+  const mustBuyToggle = el('button', {
+    class: 'icon-btn' + (product.mustBuy ? ' active-star' : ''), style: { width: '32px', height: '32px' },
+    title: product.mustBuy ? '取消必買標記' : '設為這次必買',
+    onclick: () => {
+      state.data.products = state.data.products.map((p) => (p.id === product.id ? Object.assign({}, p, { mustBuy: !p.mustBuy }) : p));
+      persistData();
+      renderOverlay();
+      renderMain();
+    },
+  }, icon('star', { size: 17, filled: product.mustBuy }));
+  const likedToggle = el('button', {
+    class: 'icon-btn' + (product.liked ? ' active-heart' : ''), style: { width: '32px', height: '32px' },
+    title: product.liked ? '取消用過喜歡標記' : '標記為用過喜歡',
+    onclick: () => {
+      state.data.products = state.data.products.map((p) => (p.id === product.id ? Object.assign({}, p, { liked: !p.liked }) : p));
+      persistData();
+      renderOverlay();
+      renderMain();
+    },
+  }, icon('heart', { size: 17, filled: product.liked }));
+  const drawerHeader = el('div', { class: 'drawer-header' }, [
+    el('div', { class: 'text-xs text-faint' }, `${category ? category.name : ''} · ${product.subcategory}`),
+    el('div', { class: 'flex gap-2' }, [
+      mustBuyToggle,
+      likedToggle,
+      el('button', { class: 'icon-btn', style: { width: '32px', height: '32px' }, onclick: closeOverlayLayer('drawer') }, icon('x', { size: 18 })),
+    ]),
+  ]);
+
+  const body = el('div', { class: 'drawer-body' });
+  body.appendChild(el('div', { class: 'drawer-image' },
+    product.imageUrl ? el('img', { src: product.imageUrl, alt: product.name }) : icon('tag', { size: 32, class: 'text-orange-200' })
+  ));
+  body.appendChild(el('div', { class: 'drawer-brand' }, product.brand));
+  body.appendChild(el('h2', { class: 'drawer-title' }, product.name));
+  body.appendChild(el('div', { class: 'drawer-spec' }, `商品規格：${product.spec}`));
+  const statusChips = [];
+  if (product.mustBuy) statusChips.push(el('span', { class: 'must-buy-chip' }, [icon('star', { size: 12, filled: true }), '這次必買']));
+  if (product.liked) statusChips.push(el('span', { class: 'liked-chip' }, [icon('heart', { size: 12, filled: true }), '用過喜歡']));
+  if (statusChips.length > 0) body.appendChild(el('div', { class: 'flex gap-2', style: { flexWrap: 'wrap' } }, statusChips));
+  const customFieldDefs = (category && category.customFields) || [];
+  const customValues = product.customValues || {};
+  const filledCustom = customFieldDefs.filter((f) => customValues[f.id]);
+  if (filledCustom.length > 0) {
+    body.appendChild(el('div', { class: 'flex gap-2', style: { flexWrap: 'wrap', marginTop: '8px' } },
+      filledCustom.map((f) => el('span', { class: 'tag-chip' }, `${f.label}：${customValues[f.id]}`))
+    ));
+  }
+  if (product.note) body.appendChild(el('p', { class: 'drawer-note' }, product.note));
+
+  const actions = el('div', { class: 'drawer-actions' }, [
+    el('button', {
+      class: 'btn btn-primary', style: { flex: '1' },
+      onclick: () => { state.showAddPriceFor = { productId: product.id }; renderOverlay(); },
+    }, [icon('plus', { size: 15 }), '新增價格']),
+    el('button', {
+      class: 'btn btn-outline',
+      onclick: () => { state.addProductPreset = { editProduct: product }; renderOverlay(); },
+    }, '編輯'),
+    el('button', { class: 'btn btn-danger-outline', onclick: () => {
+      const removedProduct = product;
+      const removedRecords = state.data.priceRecords.filter((r) => r.productId === product.id);
+      state.data.products = state.data.products.filter((p) => p.id !== product.id);
+      state.data.priceRecords = state.data.priceRecords.filter((r) => r.productId !== product.id);
+      const recycleEntry = moveToRecycle({ type: 'product', product: removedProduct, priceRecords: removedRecords });
+      persistData();
+      state.selectedProductId = null;
+      renderOverlay();
+      renderCategoryTabs();
+      renderMain();
+      showToast('已刪除商品，30 天內可從設定的回收桶復原', {
+        label: '復原',
+        onClick: () => { restoreRecycleEntry(recycleEntry.id); showToast('已復原'); },
+      });
+    } }, icon('trash', { size: 16 })),
+  ]);
+  body.appendChild(actions);
+  if (product.productUrl) {
+    body.appendChild(el('button', {
+      class: 'btn btn-outline', style: { width: '100%', marginTop: '8px', color: '#ea580c', borderColor: '#fed7aa' },
+      onclick: () => window.open(product.productUrl, '_blank'),
+    }, [icon('external', { size: 15 }), '前往官網查看']));
+  }
+
+  const priceSection = el('div', { class: 'mt6' }, [
+    el('div', { class: 'section-header', style: { marginBottom: '8px' } }, [
+      el('h3', { class: 'font-display text-base' }, '目前有效比價'),
+      el('span', { class: 'text-xs text-faint' }, `${active.length} 筆`),
+    ]),
+  ]);
+  if (unitComparable.length >= 2) {
+    priceSection.appendChild(el('p', { class: 'hint-box' }, '已依容量換算出「每單位」價格，方便比較不同容量規格 — 綠色標示為換算後最划算的選擇。'));
+  }
+  if (withTwd.length === 0) {
+    priceSection.appendChild(el('p', { class: 'text-sm text-faint text-center py3', style: { border: '1px dashed #ffedd5', borderRadius: '18px' } }, '尚無有效價格紀錄'));
+  } else {
+    priceSection.appendChild(el('div', { class: 'price-list' }, withTwd.map((r) => buildPriceRow(r, {
+      productSpec: product.spec,
+      isBestTotal: r.id === bestTotalId,
+      isBestUnit: r.id === bestUnitId,
+      onToggleStatus: () => { toggleRecordStatus(r.id); renderOverlay(); },
+      actionLabel: '標記為已漲價／失效',
+      onEdit: () => { state.showAddPriceFor = { productId: product.id, editRecord: r }; renderOverlay(); },
+      onDelete: () => { deletePriceRecord(r.id, product.id); },
+    }))));
+  }
+  body.appendChild(priceSection);
+
+  const historyToggleBtn = el('button', { class: 'history-toggle' }, [
+    icon('history', { size: 15 }),
+    el('span', {}, state.showHistory ? '隱藏歷史價格紀錄' : `顯示歷史價格紀錄 (${history.length})`),
+  ]);
+  historyToggleBtn.addEventListener('click', () => { state.showHistory = !state.showHistory; renderOverlay(); });
+  const historyWrap = el('div', { class: 'mt3' }, [historyToggleBtn]);
+  if (state.showHistory) {
+    if (sortedHistory.length === 0) {
+      historyWrap.appendChild(el('p', { class: 'text-sm text-faint text-center py3' }, '尚無歷史紀錄'));
+    } else {
+      historyWrap.appendChild(el('div', { class: 'history-list' }, sortedHistory.map((r) => el('div', { class: 'opacity-75' }, buildPriceRow(r, {
+        productSpec: product.spec, isBestTotal: false, isBestUnit: false,
+        onToggleStatus: () => { toggleRecordStatus(r.id); renderOverlay(); },
+        actionLabel: '恢復為有效價格',
+        onEdit: () => { state.showAddPriceFor = { productId: product.id, editRecord: r }; renderOverlay(); },
+        onDelete: () => { deletePriceRecord(r.id, product.id); },
+      })))));
+    }
+  }
+  body.appendChild(historyWrap);
+
+  return el('div', { class: 'drawer' }, [drawerHeader, body]);
+}
+
+function toggleRecordStatus(recordId) {
+  state.data.priceRecords = state.data.priceRecords.map((r) => (r.id === recordId ? Object.assign({}, r, { status: r.status === 'active' ? 'expired' : 'active' }) : r));
+  persistData();
+  renderMain();
+}
+
+function deletePriceRecord(recordId, productId) {
+  const removed = state.data.priceRecords.find((r) => r.id === recordId);
+  if (!removed) return;
+  state.data.priceRecords = state.data.priceRecords.filter((r) => r.id !== recordId);
+  const recycleEntry = moveToRecycle({ type: 'priceRecord', record: removed, productId });
+  persistData();
+  renderOverlay();
+  renderMain();
+  showToast('已刪除這筆價格紀錄', {
+    label: '復原',
+    onClick: () => { restoreRecycleEntry(recycleEntry.id); showToast('已復原'); },
+  });
+}
+
+/* ---------------- 表單小工具 ---------------- */
+function field(labelText, inputNode) {
+  return el('div', { class: 'field' }, [el('label', { class: 'field-label' }, labelText), inputNode]);
+}
+function closeOverlayLayer(which) {
+  return () => {
+    if (which === 'drawer') state.selectedProductId = null;
+    if (which === 'addProduct') state.addProductPreset = null;
+    if (which === 'addPrice') state.showAddPriceFor = null;
+    if (which === 'settings') state.showSettings = false;
+    renderOverlay();
+  };
+}
+
+/* ---------------- 新增商品 Modal ---------------- */
+function buildAddProductModal(preset) {
+  const editingProduct = preset.editProduct || null;
+  const categories = state.data.categories;
+  const modalUid = uid();
+  let categoryId = editingProduct ? editingProduct.categoryId : (state.activeCategoryId || (categories[0] && categories[0].id));
+  const subcatInput = el('input', { class: 'field-input', placeholder: '例如：化妝水（可自行輸入新項目）', list: 'subcat-options-list-' + modalUid });
+  subcatInput.value = editingProduct ? editingProduct.subcategory : (preset.subcategory || '');
+  const subDatalist = el('datalist', { id: 'subcat-options-list-' + modalUid });
+
+  const brandInput = el('input', { class: 'field-input', required: 'required', list: 'brand-options-list-' + modalUid });
+  const brandDatalist = el('datalist', { id: 'brand-options-list-' + modalUid });
+
+  const customFieldsContainer = el('div', {});
+  let customInputs = {};
+
+  function refreshCategoryDependentUI() {
+    subDatalist.innerHTML = '';
+    const cat = categories.find((c) => c.id === categoryId);
+    (cat ? cat.subcategories : []).forEach((s) => subDatalist.appendChild(el('option', { value: s })));
+
+    brandDatalist.innerHTML = '';
+    const brandsInCat = Array.from(new Set(state.data.products.filter((p) => p.categoryId === categoryId).map((p) => p.brand))).sort();
+    brandsInCat.forEach((b) => brandDatalist.appendChild(el('option', { value: b })));
+
+    customFieldsContainer.innerHTML = '';
+    customInputs = {};
+    const fields = (cat && cat.customFields) || [];
+    fields.forEach((f) => {
+      const input = el('input', { class: 'field-input' });
+      if (editingProduct && editingProduct.categoryId === categoryId) {
+        input.value = (editingProduct.customValues || {})[f.id] || '';
+      }
+      customInputs[f.id] = input;
+      customFieldsContainer.appendChild(field(f.label + '（選填）', input));
+    });
+  }
+  refreshCategoryDependentUI();
+
+  const categorySelect = el('select', {
+    class: 'field-input',
+    onchange: (e) => { categoryId = e.target.value; refreshCategoryDependentUI(); },
+  }, categories.map((c) => el('option', { value: c.id }, c.name)));
+  categorySelect.value = categoryId;
+
+  const specInput = el('input', { class: 'field-input', placeholder: '例如：230ml' });
+  const nameInput = el('input', { class: 'field-input', required: 'required' });
+  const productUrlInput = el('input', { class: 'field-input', placeholder: 'https://...' });
+  const noteInput = el('textarea', { class: 'field-input', rows: 2 });
+
+  /* 商品圖片：可直接從相簿上傳照片，也可以貼網址 */
+  const imageInput = el('input', { class: 'field-input', placeholder: '或貼上圖片網址 https://...' });
+  const imagePreview = el('img', { style: { width: '56px', height: '56px', objectFit: 'cover', borderRadius: '12px', display: 'none' } });
+  const fileInput = el('input', { type: 'file', accept: 'image/*', class: 'hidden' });
+  function updateImagePreview() {
+    if (imageInput.value) { imagePreview.src = imageInput.value; imagePreview.style.display = 'block'; }
+    else { imagePreview.style.display = 'none'; }
+  }
+  const uploadBtn = el('button', { type: 'button', class: 'btn btn-outline', onclick: () => fileInput.click() }, '上傳照片');
+  const removeImgBtn = el('button', { type: 'button', class: 'text-xs text-faint', style: { textDecoration: 'underline' }, onclick: () => { imageInput.value = ''; updateImagePreview(); } }, '清除圖片');
+  fileInput.addEventListener('change', async (e) => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    uploadBtn.disabled = true;
+    uploadBtn.textContent = '處理中...';
+    try {
+      const dataUrl = await compressImageFile(f);
+      imageInput.value = dataUrl;
+      updateImagePreview();
+    } catch (err) {
+      showToast('這張照片讀取失敗，換一張試試');
+    } finally {
+      uploadBtn.disabled = false;
+      uploadBtn.textContent = '上傳照片';
+      e.target.value = '';
+    }
+  });
+  imageInput.addEventListener('input', updateImagePreview);
+
+  if (editingProduct) {
+    brandInput.value = editingProduct.brand;
+    specInput.value = editingProduct.spec || '';
+    nameInput.value = editingProduct.name;
+    imageInput.value = editingProduct.imageUrl || '';
+    productUrlInput.value = editingProduct.productUrl || '';
+    noteInput.value = editingProduct.note || '';
+  }
+  updateImagePreview();
+
+  const form = el('form', {
+    onsubmit: (e) => {
+      e.preventDefault();
+      if (!brandInput.value.trim() || !nameInput.value.trim()) return;
+      const subcategory = subcatInput.value.trim();
+      state.data.categories = state.data.categories.map((c) => {
+        if (c.id === categoryId && subcategory && c.subcategories.indexOf(subcategory) === -1) {
+          return Object.assign({}, c, { subcategories: c.subcategories.concat([subcategory]) });
+        }
+        return c;
+      });
+      const customValues = {};
+      Object.keys(customInputs).forEach((fid) => {
+        const v = customInputs[fid].value.trim();
+        if (v) customValues[fid] = v;
+      });
+      const payload = {
+        categoryId, subcategory, brand: brandInput.value.trim(), name: nameInput.value.trim(),
+        spec: specInput.value.trim(), note: noteInput.value.trim(), imageUrl: imageInput.value.trim(),
+        productUrl: productUrlInput.value.trim(), customValues,
+      };
+      if (editingProduct) {
+        state.data.products = state.data.products.map((p) => (p.id === editingProduct.id ? Object.assign({}, p, payload) : p));
+        showToast('已更新商品');
+      } else {
+        payload.id = 'prod-' + uid();
+        state.data.products.push(payload);
+        showToast('已新增商品');
+      }
+      state.activeCategoryId = categoryId;
+      persistData();
+      state.addProductPreset = null;
+      renderOverlay();
+      renderCategoryTabs();
+      renderMain();
+    },
+  }, [
+    field('大分類', categorySelect),
+    field('次分類/細項', subcatInput),
+    subDatalist,
+    el('div', { class: 'field-row' }, [field('品牌', brandInput), field('規格/容量（預設，例如 230ml）', specInput)]),
+    brandDatalist,
+    field('商品名稱', nameInput),
+    field('商品圖片（選填）', el('div', {}, [
+      el('div', { class: 'flex items-center gap-3 mb2' }, [imagePreview, uploadBtn, removeImgBtn]),
+      imageInput,
+      fileInput,
+    ])),
+    field('商品連結（選填，方便之後快速前往官網比對，不會自動抓價）', productUrlInput),
+    field('備註/介紹描述', noteInput),
+    customFieldsContainer,
+    el('button', { type: 'submit', class: 'submit-btn' }, editingProduct ? '儲存修改' : '新增商品'),
+  ]);
+
+  return buildModalShell(editingProduct ? '編輯商品' : '新增商品', closeOverlayLayer('addProduct'), form, false);
+}
+
+/* ---------------- 新增價格 Modal ---------------- */
+function buildAddPriceModal(productId, editRecord) {
+  const modalUid = uid();
+  const knownCountries = Array.from(new Set(state.data.priceRecords.map((r) => r.country).filter(Boolean)));
+  const knownStores = Array.from(new Set(state.data.priceRecords.map((r) => r.store).filter(Boolean)));
+  const countryInput = el('input', { class: 'field-input', placeholder: '例如：韓國（可自行輸入新項目）', required: 'required', list: 'country-options-' + modalUid });
+  const countryDatalist = el('datalist', { id: 'country-options-' + modalUid }, knownCountries.map((c) => el('option', { value: c })));
+  const currencySelect = el('select', { class: 'field-input' }, CURRENCIES.map((c) => el('option', { value: c }, c)));
+  const storeInput = el('input', { class: 'field-input', placeholder: '例如：Olive Young 明洞店（可自行輸入新項目）', required: 'required', list: 'store-options-' + modalUid });
+  const storeDatalist = el('datalist', { id: 'store-options-' + modalUid }, knownStores.map((s) => el('option', { value: s })));
+  const capacityInput = el('input', { class: 'field-input', placeholder: '例如：500ml（用於換算每單位價格）' });
+  const datetimeInput = el('input', { class: 'field-input', type: 'datetime-local' });
+  datetimeInput.value = nowLocalInput();
+  const priceInput = el('input', { class: 'field-input tabular', type: 'number', step: '0.01', required: 'required' });
+  const bundleNoteInput = el('input', { class: 'field-input', placeholder: '例如：1+1 或加贈小樣' });
+
+  let priceType = 'original';
+  const typeButtons = {};
+  const bundleField = field('組合備註', bundleNoteInput);
+  bundleField.style.display = 'none';
+  function setPriceType(v) {
+    priceType = v;
+    Object.keys(typeButtons).forEach((k) => typeButtons[k].classList.toggle('active', k === v));
+    bundleField.style.display = v === 'bundle' ? '' : 'none';
+  }
+  const typeRow = el('div', { class: 'type-toggle-row' }, [['original', '定價'], ['sale', '特價'], ['bundle', '組合價']].map(([v, l]) => {
+    const btn = el('button', { type: 'button', class: 'type-toggle-btn' + (v === 'original' ? ' active' : ''), onclick: () => setPriceType(v) }, l);
+    typeButtons[v] = btn;
+    return btn;
+  }));
+
+  if (editRecord) {
+    countryInput.value = editRecord.country;
+    currencySelect.value = editRecord.currency;
+    storeInput.value = editRecord.store;
+    capacityInput.value = editRecord.capacity || '';
+    datetimeInput.value = (function () {
+      const d = new Date(editRecord.datetime);
+      const pad = (n) => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    })();
+    priceInput.value = editRecord.price;
+    bundleNoteInput.value = editRecord.bundleNote || '';
+    setPriceType(editRecord.priceType);
+  }
+
+  const form = el('form', {
+    onsubmit: (e) => {
+      e.preventDefault();
+      const p = parseFloat(priceInput.value);
+      if (!countryInput.value.trim() || !storeInput.value.trim() || isNaN(p)) return;
+      const payload = {
+        country: countryInput.value.trim(), currency: currencySelect.value, store: storeInput.value.trim(),
+        datetime: new Date(datetimeInput.value).toISOString(),
+        priceType, price: p, bundleNote: priceType === 'bundle' ? bundleNoteInput.value.trim() : '',
+        capacity: capacityInput.value.trim(),
+      };
+      if (editRecord) {
+        state.data.priceRecords = state.data.priceRecords.map((r) => (r.id === editRecord.id ? Object.assign({}, r, payload) : r));
+        showToast('已更新價格紀錄');
+      } else {
+        payload.id = 'pr-' + uid();
+        payload.productId = productId;
+        payload.status = 'active';
+        state.data.priceRecords.push(payload);
+        showToast('已新增價格紀錄');
+      }
+      persistData();
+      state.showAddPriceFor = null;
+      renderOverlay();
+      renderMain();
+    },
+  }, [
+    el('div', { class: 'field-row' }, [field('購買國家/地區', countryInput), field('幣別', currencySelect)]),
+    countryDatalist,
+    field('通路/店家名稱', storeInput),
+    storeDatalist,
+    field('這次購買的容量（選填，留空則套用商品預設規格）', capacityInput),
+    field('紀錄日期時間', datetimeInput),
+    field('價格型態', typeRow),
+    bundleField,
+    field('價格金額', priceInput),
+    el('button', { type: 'submit', class: 'submit-btn' }, editRecord ? '儲存修改' : '儲存紀錄'),
+  ]);
+
+  return buildModalShell(editRecord ? '編輯價格紀錄' : '新增價格紀錄', closeOverlayLayer('addPrice'), form, false);
+}
+
+/* ---------------- 設定 Modal ---------------- */
+function buildSettingsModal() {
+  const rates = state.data.exchangeRates;
+  const rateInputs = {};
+  const rateFields = ['KRW', 'JPY', 'USD', 'CNY', 'EUR', 'HKD'].map((cur) => {
+    const input = el('input', { class: 'field-input tabular', type: 'number', step: '0.0001' });
+    input.value = rates[cur] != null ? rates[cur] : '';
+    rateInputs[cur] = input;
+    return field(`1 TWD = ? ${cur}`, input);
+  });
+
+  const saveBtn = el('button', {
+    class: 'btn btn-primary', style: { marginTop: '16px' },
+    onclick: () => {
+      const parsed = {};
+      Object.keys(rateInputs).forEach((k) => { const n = parseFloat(rateInputs[k].value); if (!isNaN(n) && n > 0) parsed[k] = n; });
+      state.data.exchangeRates = parsed;
+      persistData();
+      renderMain();
+      showToast('匯率已更新');
+    },
+  }, '儲存匯率設定');
+
+  const liveStatus = el('span', { class: 'text-xs text-faint', style: { marginLeft: '10px' } }, '');
+  const liveBtn = el('button', {
+    class: 'btn btn-outline', style: { marginTop: '16px', marginLeft: '8px' },
+    onclick: async () => {
+      liveBtn.disabled = true;
+      liveBtn.textContent = '抓取中...';
+      try {
+        const res = await fetch('https://open.er-api.com/v6/latest/TWD');
+        if (!res.ok) throw new Error('network');
+        const json = await res.json();
+        if (json.result !== 'success' || !json.rates) throw new Error('api');
+        Object.keys(rateInputs).forEach((k) => {
+          if (json.rates[k] != null) rateInputs[k].value = Number(json.rates[k]).toFixed(4);
+        });
+        liveStatus.textContent = json.time_last_update_utc ? `更新於 ${json.time_last_update_utc}` : '已抓取最新匯率';
+        showToast('已抓取即時匯率，記得按「儲存匯率設定」');
+      } catch (err) {
+        showToast('抓取即時匯率失敗，請檢查網路連線');
+      } finally {
+        liveBtn.disabled = false;
+        liveBtn.textContent = '更新即時匯率';
+      }
+    },
+  }, '更新即時匯率');
+
+  /* ---- 分類管理：可以刪除不需要的大分類（連同裡面的商品一起，會先放回收桶） ---- */
+  const categoryManageListContainer = el('div', { class: 'mt2' });
+  function refreshCategoryManageList() {
+    categoryManageListContainer.innerHTML = '';
+    state.data.categories.forEach((c) => {
+      const count = state.data.products.filter((p) => p.categoryId === c.id).length;
+      categoryManageListContainer.appendChild(el('div', { class: 'flex items-center justify-between', style: { padding: '6px 0', borderBottom: '1px solid #fff7ed' } }, [
+        el('span', { class: 'text-sm' }, `${c.name}（${count} 件商品）`),
+        el('button', {
+          type: 'button', class: 'text-xs text-rose-600', style: { textDecoration: 'underline' },
+          onclick: () => {
+            if (state.data.categories.length <= 1) { showToast('至少要保留一個分類'); return; }
+            const msg = count > 0
+              ? `分類「${c.name}」裡有 ${count} 件商品，刪除後連同商品與價格紀錄會一起移到回收桶（30 天內可復原）。確定要刪除嗎？`
+              : `確定要刪除分類「${c.name}」嗎？`;
+            if (!confirm(msg)) return;
+            deleteCategoryWithContents(c.id);
+            renderCategoryTabs();
+            renderMain();
+            renderOverlay();
+          },
+        }, '刪除'),
+      ]));
+    });
+  }
+  refreshCategoryManageList();
+
+  /* ---- 分類欄位設定：幫每個大分類加自訂欄位（例如香水的「香調」） ---- */
+  let fieldsCategoryId = (state.data.categories[0] && state.data.categories[0].id) || null;
+  const fieldsListContainer = el('div', { class: 'mt2' });
+  const newFieldNameInput = el('input', { class: 'field-input', placeholder: '例如：香調 / 適合季節' });
+  const newFieldFilterableCheckbox = el('input', { type: 'checkbox' });
+  const newFieldShowOnCardCheckbox = el('input', { type: 'checkbox' });
+
+  function refreshFieldsList() {
+    fieldsListContainer.innerHTML = '';
+    const cat = state.data.categories.find((c) => c.id === fieldsCategoryId);
+    const fields = (cat && cat.customFields) || [];
+    if (fields.length === 0) {
+      fieldsListContainer.appendChild(el('p', { class: 'text-xs text-faint' }, '這個分類目前沒有自訂欄位'));
+      return;
+    }
+    fields.forEach((f) => {
+      fieldsListContainer.appendChild(el('div', { class: 'flex items-center justify-between', style: { padding: '6px 0', borderBottom: '1px solid #fff7ed' } }, [
+        el('div', {}, [
+          el('span', { class: 'text-sm' }, f.label),
+          f.filterable ? el('span', { class: 'tag-chip bundle', style: { marginLeft: '8px' } }, '可篩選') : null,
+          f.showOnCard ? el('span', { class: 'tag-chip sale', style: { marginLeft: '8px' } }, '顯示在卡片') : null,
+        ]),
+        el('button', {
+          type: 'button', class: 'text-xs text-rose-600', style: { textDecoration: 'underline' },
+          onclick: () => {
+            state.data.categories = state.data.categories.map((c) => (c.id === fieldsCategoryId
+              ? Object.assign({}, c, { customFields: (c.customFields || []).filter((x) => x.id !== f.id) })
+              : c));
+            persistData();
+            refreshFieldsList();
+            renderMain();
+            showToast('已移除「' + f.label + '」欄位');
+          },
+        }, '刪除'),
+      ]));
+    });
+  }
+  refreshFieldsList();
+
+  const fieldsCategorySelect = el('select', {
+    class: 'field-input',
+    onchange: (e) => { fieldsCategoryId = e.target.value; refreshFieldsList(); },
+  }, state.data.categories.map((c) => el('option', { value: c.id }, c.name)));
+  fieldsCategorySelect.value = fieldsCategoryId;
+
+  const addFieldBtn = el('button', {
+    type: 'button', class: 'btn btn-outline', style: { marginTop: '10px' },
+    onclick: () => {
+      const label = newFieldNameInput.value.trim();
+      if (!label) return;
+      const newField = { id: 'cf-' + uid(), label, filterable: !!newFieldFilterableCheckbox.checked, showOnCard: !!newFieldShowOnCardCheckbox.checked };
+      state.data.categories = state.data.categories.map((c) => (c.id === fieldsCategoryId
+        ? Object.assign({}, c, { customFields: (c.customFields || []).concat([newField]) })
+        : c));
+      persistData();
+      newFieldNameInput.value = '';
+      newFieldFilterableCheckbox.checked = false;
+      newFieldShowOnCardCheckbox.checked = false;
+      refreshFieldsList();
+      renderMain();
+      showToast('已新增欄位：' + label);
+    },
+  }, '新增欄位');
+
+  /* ---- 排序管理：次分類的順序、以及同次分類內商品的順序 ---- */
+  /* ---- 儲存空間：讓使用者知道目前大概佔用多少空間，照片跟回收桶是大宗 ---- */
+  function formatBytes(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / 1024 / 1024).toFixed(2) + ' MB';
+  }
+  function getStorageStats() {
+    const totalBytes = new Blob([JSON.stringify(state.data)]).size;
+    let photoBytes = 0;
+    state.data.products.forEach((p) => { if (p.imageUrl && p.imageUrl.indexOf('data:') === 0) photoBytes += new Blob([p.imageUrl]).size; });
+    const recycleBytes = new Blob([JSON.stringify(state.data.recycle || [])]).size;
+    return { totalBytes, photoBytes, recycleBytes };
+  }
+  const storageStatsContainer = el('div', {});
+  function refreshStorageStats() {
+    storageStatsContainer.innerHTML = '';
+    const stats = getStorageStats();
+    const near = stats.totalBytes > STORAGE_WARN_BYTES;
+    storageStatsContainer.appendChild(el('div', { class: 'cloud-status ' + (near ? 'warn' : 'off') }, [
+      el('div', {}, `目前總共約 ${formatBytes(stats.totalBytes)}`),
+      el('div', { style: { marginTop: '4px' } }, `其中商品照片約 ${formatBytes(stats.photoBytes)}，回收桶約 ${formatBytes(stats.recycleBytes)}`),
+      near ? el('div', { style: { marginTop: '6px', fontWeight: '600' } }, '⚠️ 空間快滿了，建議現在就「匯出 JSON」備份，並清理一些照片或回收桶，避免之後存檔失敗、資料遺失。') : null,
+    ]));
+  }
+  refreshStorageStats();
+
+  let orderCategoryId = (state.data.categories[0] && state.data.categories[0].id) || null;
+  let orderSubcat = null;
+  const orderSubcatListContainer = el('div', {});
+  const orderProductSelectWrap = el('div', {});
+  const orderProductListContainer = el('div', {});
+
+  function refreshOrderSubcatList() {
+    orderSubcatListContainer.innerHTML = '';
+    const cat = state.data.categories.find((c) => c.id === orderCategoryId);
+    const subs = (cat && cat.subcategories) || [];
+    const usedSubs = subs.filter((s) => state.data.products.some((p) => p.categoryId === orderCategoryId && p.subcategory === s));
+    if (usedSubs.length === 0) {
+      orderSubcatListContainer.appendChild(el('p', { class: 'text-xs text-faint' }, '這個分類目前還沒有商品，沒有次分類可以排序'));
+    } else {
+      orderSubcatListContainer.appendChild(buildDragList(
+        usedSubs,
+        (s) => el('div', { class: 'drag-row-content' }, el('span', { class: 'order-row-title' }, s)),
+        (newOrder) => { setSubcategoryOrderAmongUsed(orderCategoryId, usedSubs, newOrder); renderMain(); }
+      ));
+    }
+    refreshOrderProductSelect();
+  }
+
+  function refreshOrderProductSelect() {
+    orderProductSelectWrap.innerHTML = '';
+    const cat = state.data.categories.find((c) => c.id === orderCategoryId);
+    const subs = (cat && cat.subcategories) || [];
+    const usedSubs = subs.filter((s) => state.data.products.some((p) => p.categoryId === orderCategoryId && p.subcategory === s));
+    if (usedSubs.length === 0) { orderProductListContainer.innerHTML = ''; return; }
+    if (!orderSubcat || usedSubs.indexOf(orderSubcat) === -1) orderSubcat = usedSubs[0];
+    const sel = el('select', {
+      class: 'field-input',
+      onchange: (e) => { orderSubcat = e.target.value; refreshOrderProductList(); },
+    }, usedSubs.map((s) => el('option', { value: s }, s)));
+    sel.value = orderSubcat;
+    orderProductSelectWrap.appendChild(field('選擇次分類來排序裡面的商品', sel));
+    refreshOrderProductList();
+  }
+
+  function refreshOrderProductList() {
+    orderProductListContainer.innerHTML = '';
+    if (!orderSubcat) return;
+    const items = state.data.products.filter((p) => p.categoryId === orderCategoryId && p.subcategory === orderSubcat);
+    if (items.length === 0) {
+      orderProductListContainer.appendChild(el('p', { class: 'text-xs text-faint' }, '這個次分類目前沒有商品'));
+      return;
+    }
+    const ids = items.map((p) => p.id);
+    orderProductListContainer.appendChild(buildDragList(
+      ids,
+      (id) => {
+        const p = items.find((x) => x.id === id);
+        return el('div', { class: 'drag-row-content' }, el('span', { class: 'order-row-title' }, `${p.brand} · ${p.name}`));
+      },
+      (newOrder) => { setProductOrderWithinSubcategory(orderCategoryId, orderSubcat, newOrder); renderMain(); }
+    ));
+  }
+  refreshOrderSubcatList();
+
+  const orderCategorySelect = el('select', {
+    class: 'field-input',
+    onchange: (e) => { orderCategoryId = e.target.value; orderSubcat = null; refreshOrderSubcatList(); },
+  }, state.data.categories.map((c) => el('option', { value: c.id }, c.name)));
+  orderCategorySelect.value = orderCategoryId;
+
+  /* ---- 回收桶：被刪除的商品／價格紀錄，30 天內可以復原 ---- */
+  const recycleListContainer = el('div', {});
+  function refreshRecycleList() {
+    recycleListContainer.innerHTML = '';
+    const entries = (state.data.recycle || []).slice().sort((a, b) => new Date(b.deletedAt) - new Date(a.deletedAt));
+    if (entries.length === 0) {
+      recycleListContainer.appendChild(el('p', { class: 'text-xs text-faint' }, '回收桶是空的'));
+      return;
+    }
+    entries.forEach((e) => {
+      let title, sub;
+      if (e.type === 'category') {
+        title = `分類：${e.category.name}`;
+        sub = `含 ${(e.products || []).length} 件商品、${(e.priceRecords || []).length} 筆價格紀錄 · ${formatDate(e.deletedAt)} 刪除`;
+      } else if (e.type === 'product') {
+        title = `${e.product.brand} · ${e.product.name}`;
+        sub = `商品（含 ${(e.priceRecords || []).length} 筆價格紀錄） · ${formatDate(e.deletedAt)} 刪除`;
+      } else {
+        const owner = state.data.products.find((p) => p.id === e.productId);
+        title = `${owner ? owner.name : '（原商品已不存在）'} — ${e.record.store} ${e.record.currency} ${e.record.price.toLocaleString()}`;
+        sub = `價格紀錄 · ${formatDate(e.deletedAt)} 刪除`;
+      }
+      recycleListContainer.appendChild(el('div', { class: 'recycle-item' }, [
+        el('div', { style: { minWidth: 0 } }, [
+          el('div', { class: 'recycle-item-title' }, title),
+          el('div', { class: 'recycle-item-sub' }, sub),
+        ]),
+        el('div', { class: 'recycle-actions' }, [
+          el('button', { type: 'button', class: 'text-orange-600', onclick: () => { restoreRecycleEntry(e.id); refreshRecycleList(); refreshStorageStats(); showToast('已復原'); } }, '復原'),
+          el('button', { type: 'button', class: 'text-rose-600', onclick: () => {
+            if (!confirm('永久刪除後將無法復原，確定嗎？')) return;
+            permanentlyDeleteRecycleEntry(e.id);
+            refreshRecycleList();
+            refreshStorageStats();
+          } }, '永久刪除'),
+        ]),
+      ]));
+    });
+  }
+  refreshRecycleList();
+
+  const emptyRecycleBtn = el('button', {
+    type: 'button', class: 'btn btn-outline', style: { marginTop: '10px', color: '#e11d48', borderColor: '#ffedd5' },
+    onclick: () => {
+      if ((state.data.recycle || []).length === 0) { showToast('回收桶已經是空的'); return; }
+      if (!confirm('確定要清空整個回收桶嗎？裡面所有項目將永久刪除，無法復原。')) return;
+      state.data.recycle = [];
+      persistData();
+      refreshRecycleList();
+      refreshStorageStats();
+      showToast('回收桶已清空');
+    },
+  }, '立即清空回收桶');
+
+  /* ---- 匯出選項：資料量大時可以選擇不包含照片，備份檔會小很多 ---- */
+  const includePhotosCheckbox = el('input', { type: 'checkbox', checked: 'checked' });
+
+  const fileInput = el('input', {
+    type: 'file', accept: 'application/json', class: 'hidden',
+    onchange: (e) => {
+      const f = e.target.files && e.target.files[0];
+      if (!f) return;
+      if (!confirm('匯入將取代目前所有資料，確定要繼續嗎？')) { e.target.value = ''; return; }
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          if (!parsed.categories || !parsed.products || !parsed.priceRecords) { showToast('檔案格式不正確'); return; }
+          state.data = { categories: parsed.categories, products: parsed.products, priceRecords: parsed.priceRecords, exchangeRates: parsed.exchangeRates || {}, recycle: parsed.recycle || [] };
+          state.activeCategoryId = parsed.categories[0] ? parsed.categories[0].id : null;
+          persistData();
+          state.showSettings = false;
+          renderOverlay();
+          renderCategoryTabs();
+          renderMain();
+          showToast('匯入成功');
+        } catch (err) { showToast('匯入失敗，請確認檔案格式'); }
+      };
+      reader.readAsText(f);
+      e.target.value = '';
+    },
+  });
+
+  const exportBtn = el('button', { class: 'btn btn-outline', style: { flex: '1' }, onclick: () => {
+    let exportData = state.data;
+    if (!includePhotosCheckbox.checked) {
+      exportData = Object.assign({}, state.data, {
+        products: state.data.products.map((p) => (p.imageUrl && p.imageUrl.indexOf('data:') === 0 ? Object.assign({}, p, { imageUrl: '' }) : p)),
+      });
+    }
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = el('a', { href: url, download: `price-tracker-backup-${new Date().toISOString().slice(0, 10)}.json` });
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('已匯出備份檔');
+  } }, [icon('download', { size: 15 }), '匯出 JSON']);
+  const importBtn = el('button', { class: 'btn btn-outline', style: { flex: '1' }, onclick: () => fileInput.click() }, [icon('upload', { size: 15 }), '匯入 JSON']);
+
+  const body = el('div', { class: 'space-y-7' }, [
+    el('div', { class: 'cloud-status ' + (CLOUD_ENABLED ? 'on' : 'off') },
+      CLOUD_ENABLED ? '雲端同步已開啟：不同裝置打開會看到同一份資料。' : '目前只存在這台裝置的瀏覽器裡。如需跨裝置同步，請在程式碼最上方設定 CLOUD_ENABLED。'),
+    el('div', {}, [
+      el('h4', { class: 'font-display text-base mb1' }, '分類管理'),
+      el('p', { class: 'text-xs text-faint mb2' }, '可以刪除不需要的分類；刪除後連同裡面的商品、價格紀錄會先放到回收桶，30 天內都能復原。'),
+      categoryManageListContainer,
+    ]),
+    el('div', { class: 'border-t', style: { paddingTop: '24px', borderTop: '1px dashed #fed7aa' } }, [
+      el('h4', { class: 'font-display text-base mb1' }, '台幣參考匯率'),
+      el('p', { class: 'text-xs text-faint mb2' }, '填寫「1 台幣（TWD）等於多少外幣」，例如 1 TWD = 42 KRW，用於自動換算約略台幣金額。'),
+      el('div', { class: 'grid grid-cols-2', style: { gap: '16px' } }, rateFields),
+      el('div', { class: 'flex items-center', style: { flexWrap: 'wrap' } }, [saveBtn, liveBtn, liveStatus]),
+    ]),
+    el('div', { class: 'border-t', style: { paddingTop: '24px', borderTop: '1px dashed #fed7aa' } }, [
+      el('h4', { class: 'font-display text-base mb1' }, '分類欄位設定'),
+      el('p', { class: 'text-xs text-faint mb2' }, '幫分類加上專屬欄位（例如香水的「香調」、「適合季節」），新增商品時會出現這個欄位；「可用於篩選」會在篩選列多一個下拉；「顯示在卡片」會直接印在主畫面的商品卡片上，不用點進去才看到。'),
+      field('選擇分類', fieldsCategorySelect),
+      fieldsListContainer,
+      el('div', { style: { marginTop: '12px' } }, [newFieldNameInput]),
+      el('div', { class: 'flex gap-4', style: { marginTop: '8px' } }, [
+        el('label', { class: 'flex items-center gap-2 text-sm' }, [newFieldFilterableCheckbox, '可用於篩選']),
+        el('label', { class: 'flex items-center gap-2 text-sm' }, [newFieldShowOnCardCheckbox, '顯示在卡片']),
+      ]),
+      addFieldBtn,
+    ]),
+    el('div', { class: 'border-t', style: { paddingTop: '24px', borderTop: '1px dashed #fed7aa' } }, [
+      el('h4', { class: 'font-display text-base mb1' }, '排序管理'),
+      el('p', { class: 'text-xs text-faint mb2' }, '調整次分類出現的順序，或同一個次分類裡商品的排列順序（就是瀏覽時「排序方式：預設順序」看到的那個順序）。'),
+      field('選擇分類', orderCategorySelect),
+      el('div', { class: 'mt2' }, [el('div', { class: 'text-xs text-faint mb1' }, '次分類順序'), orderSubcatListContainer]),
+      el('div', { class: 'mt3' }, [orderProductSelectWrap, orderProductListContainer]),
+    ]),
+    el('div', { class: 'border-t', style: { paddingTop: '24px', borderTop: '1px dashed #fed7aa' } }, [
+      el('h4', { class: 'font-display text-base mb1' }, '回收桶'),
+      el('p', { class: 'text-xs text-faint mb2' }, `被刪除的商品或價格紀錄會先放在這裡 ${RECYCLE_RETENTION_DAYS} 天，超過就會自動清除；也可以在這裡手動「永久刪除」。`),
+      recycleListContainer,
+      emptyRecycleBtn,
+    ]),
+    el('div', { class: 'border-t', style: { paddingTop: '24px', borderTop: '1px dashed #fed7aa' } }, [
+      el('h4', { class: 'font-display text-base mb1' }, '儲存空間'),
+      el('p', { class: 'text-xs text-faint mb2' }, '主要佔空間的是商品照片，其次是回收桶（刪除的商品若有照片，也會先留著）。想省空間可以：少用「上傳照片」多用「貼圖片網址」、或是手動清空回收桶。'),
+      storageStatsContainer,
+    ]),
+    el('div', { class: 'border-t', style: { paddingTop: '24px', borderTop: '1px dashed #fed7aa' } }, [
+      el('h4', { class: 'font-display text-base mb1' }, '資料備份'),
+      el('p', { class: 'text-xs text-faint mb2' }, '匯出目前所有分類、商品與價格紀錄為 JSON 檔，或從備份檔匯入（將取代目前資料）。'),
+      el('label', { class: 'flex items-center gap-2 text-sm mb2' }, [includePhotosCheckbox, '匯出時包含商品照片（取消勾選可以讓備份檔小很多，方便用 Line／信箱傳送）']),
+      el('div', { class: 'flex gap-2' }, [exportBtn, importBtn, fileInput]),
+    ]),
+    el('div', { class: 'text-xs text-faint text-center', style: { paddingTop: '8px' } }, `版本更新於 ${APP_VERSION}`),
+  ]);
+
+  return buildModalShell('設定', closeOverlayLayer('settings'), body, true);
+}
+
+/* ---------------- Modal 外殼 ---------------- */
+function buildModalShell(title, onClose, contentNode, wide) {
+  const overlay = el('div', { class: 'modal-overlay', onclick: (e) => { if (e.target === overlay) onClose(); } });
+  const modal = el('div', { class: 'modal' + (wide ? ' wide' : '') });
+  modal.appendChild(el('div', { class: 'accent-rule', style: { borderRadius: '24px 24px 0 0' } }));
+  modal.appendChild(el('div', { class: 'modal-header' }, [
+    el('h3', { class: 'modal-title' }, title),
+    el('button', { class: 'icon-btn', style: { width: '32px', height: '32px' }, onclick: onClose }, icon('x', { size: 18 })),
+  ]));
+  modal.appendChild(el('div', { class: 'modal-body' }, contentNode));
+  overlay.appendChild(modal);
+  return overlay;
+}
+
+/* ---------------- Overlay 總控（drawer + modal 可疊加顯示） ---------------- */
+function renderOverlay() {
+  const root = refs.overlayRoot;
+  root.innerHTML = '';
+  if (state.selectedProductId) {
+    const product = state.data.products.find((p) => p.id === state.selectedProductId);
+    if (product) {
+      root.appendChild(el('div', { class: 'overlay-backdrop', onclick: closeOverlayLayer('drawer') }));
+      root.appendChild(buildDrawer(product));
+    }
+  }
+  if (state.addProductPreset) root.appendChild(buildAddProductModal(state.addProductPreset));
+  if (state.showAddPriceFor) root.appendChild(buildAddPriceModal(state.showAddPriceFor.productId, state.showAddPriceFor.editRecord));
+  if (state.showSettings) root.appendChild(buildSettingsModal());
+}
+
+function renderToast() {
+  const root = refs.toastRoot;
+  root.innerHTML = '';
+  if (!state.toast) return;
+  const t = state.toast;
+  const children = [el('span', {}, t.msg)];
+  if (t.action) {
+    children.push(el('button', {
+      class: 'toast-action',
+      onclick: () => {
+        clearTimeout(toastTimer);
+        state.toast = null;
+        renderToast();
+        t.action.onClick();
+      },
+    }, t.action.label));
+  }
+  root.appendChild(el('div', { class: 'toast' + (t.action ? ' with-action' : '') }, children));
+}
+
+/* ---------------- 啟動 ---------------- */
+async function boot() {
+  const cloudData = await cloudLoad();
+  let loaded = cloudData;
+  if (!loaded) loaded = localLoad();
+  if (!loaded) loaded = defaultData();
+  state.data = loaded;
+  state.activeCategoryId = loaded.categories[0] ? loaded.categories[0].id : null;
+  purgeOldRecycle();
+  localSave(loaded);
+  if (CLOUD_ENABLED && !cloudData) {
+    // 雲端還沒有有效資料（例如剛建立的空白 Bin）：
+    // 自動把本機現有資料同步上去，第一次開啟雲端同步時不用手動匯出/匯入。
+    cloudSave(loaded);
+  }
+
+  buildShell();
+  renderCategoryTabs();
+  renderMain();
+  renderOverlay();
+  renderToast();
+
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => { /* PWA 安裝非必要功能，失敗就略過 */ });
+    });
+  }
+
+  /* ---------------------------------------------------------------------
+     多分頁保護：如果同一個瀏覽器同時開了好幾個分頁，其中一個分頁存檔時，
+     其他分頁會收到這個通知，立刻把自己記憶體裡的資料換成最新的，
+     這樣那些「比較舊」的分頁之後存檔時，才不會把新資料整批蓋掉。
+     --------------------------------------------------------------------- */
+  window.addEventListener('storage', (e) => {
+    if (e.key !== STORAGE_KEY || !e.newValue) return;
+    try {
+      const fresh = JSON.parse(e.newValue);
+      if (!isValidData(fresh)) return;
+      state.data = fresh;
+      if (!state.data.categories.find((c) => c.id === state.activeCategoryId)) {
+        state.activeCategoryId = state.data.categories[0] ? state.data.categories[0].id : null;
+      }
+      renderCategoryTabs();
+      renderMain();
+      const hasOverlayOpen = state.selectedProductId || state.addProductPreset || state.showAddPriceFor || state.showSettings;
+      if (hasOverlayOpen) {
+        showToast('偵測到其他分頁更新了資料，已在背景同步最新內容');
+      }
+    } catch (err) { /* 忽略格式不正確的情況 */ }
+  });
+}
+
+boot();
+
+</script>
+</body>
+</html>
